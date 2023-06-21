@@ -12,7 +12,7 @@ void DirStruct::basic_init () {
 	catalog = std::filesystem::current_path().parent_path().string();
 	std::replace(catalog.begin(), catalog.end(), '\\', '/');
 	
-	output = catalog + "/output";
+	output = catalog + "/~output";
 	time_t timer = time(nullptr);
 	working_catalog = output + "/" + aux::time::date(timer);
 	
