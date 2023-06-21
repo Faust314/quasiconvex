@@ -5,7 +5,7 @@
 #include <string>
 #include <functional>
 
-namespace modes::test {
+namespace modes::check {
 
 class A {
 public:
@@ -42,15 +42,19 @@ struct B {
 	}
 };
 
+struct C {
+	A a;
+};
+
 void rvalue_references() {
-	
-	std::vector<A> v;
-//	v.push_back(f());
-	
-	
 	B b;
-	b.insert(f());
 	
+	C c;
+	c.a.x = "C";
+	
+//	A a(std::move(c.a));
+	b.insert(std::move(c.a));
+
 }
 
-} // namespace modes::test
+} // namespace modes::check

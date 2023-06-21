@@ -60,7 +60,8 @@ void Object::print (std::ofstream & ofs, const std::string& space) const {
 
 
 
-std::function<std::string (coord_t)> File::to_str = aux::types::to_string;
+std::function<std::string (coord_t)> File::to_str = std::function<std::string (double)>(::aux::types::to_string);
+
 void File::Layer::add_object (Object && obj) {
 	objects.push_back(std::move(obj));
 }

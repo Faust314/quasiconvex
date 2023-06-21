@@ -65,8 +65,8 @@ Stroke::Stroke () :
 	empty(true),
 	color(RGB_O()),
 	width(5),
-	linecap(round),
-	linejoin(_round_)
+	linecap(Linecap::round),
+	linejoin(Linejoin::round)
 { }
 
 Stroke::Stroke (RGB_O color_, double width_, Linecap linecap_, Linejoin linejoin_) :
@@ -85,8 +85,8 @@ std::string Stroke::operator() () const {
 	}
 	stroke += "stroke:#" + color.rgb.to_string_16() + ";";
 	stroke += "stroke-width:" + std::to_string(width) + ";";
-	stroke += "stroke-linecap:" + Stroke::linecaps[linecap] + ";";
-	stroke += "stroke-linejoin:" + Stroke::linejoins[linejoin] + ";";
+	stroke += "stroke-linecap:" + Stroke::linecaps[int(linecap)] + ";";
+	stroke += "stroke-linejoin:" + Stroke::linejoins[int(linejoin)] + ";";
 	if(color.t != 1.0) {
 		stroke += "stroke-opacity:" + std::to_string(color.t);
 	}

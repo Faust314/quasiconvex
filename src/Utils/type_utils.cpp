@@ -18,4 +18,8 @@ std::string lead_zeros (int number, int zeros_count) {
 	}
 }
 
+std::string to_string (double x) {
+	return std::to_string(x);
+}
+
 } // namespace aux::types

@@ -1,3 +1,0 @@
-C:/Users/Novik/CLionProjects/Quasiconvex/out/build/x64-Debug/CMakeFiles/quasiconvex.dir
-C:/Users/Novik/CLionProjects/Quasiconvex/out/build/x64-Debug/CMakeFiles/edit_cache.dir
-C:/Users/Novik/CLionProjects/Quasiconvex/out/build/x64-Debug/CMakeFiles/rebuild_cache.dir
