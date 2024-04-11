@@ -13,6 +13,6 @@ file(GLOB_RECURSE SOURCES RELATIVE ${CMAKE_SOURCE_DIR} "src/*" )
 
 add_executable(
     quasiconvex
-    main.cpp
+        src/main.cpp
     ${SOURCES}
 )

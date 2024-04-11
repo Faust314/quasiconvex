@@ -4,29 +4,46 @@
 
 namespace graphics::svg::object::str {
 
+void Chart::update_file () {
+	if (file_parameters_complete()) {
+		_file->set_width(
+			(_left_cells.value() + _right_cells.value()) * _svg_cell.value() +
+			2 * (_border_width + _extra_border_width.value())
+		);
+		_file->set_height(
+			(_lower_cells.value() + _upper_cells.value()) * _svg_cell.value() +
+			2 * (_border_width + _extra_border_width.value())
+		);
+	}
+}
+
+
+
 File const * Chart::get_file () const {
+	assert(with_file);
 	return _file;
 }
 
-bool Chart::file_attached () const {
-	return _file != nullptr;
+
+
+bool Chart::file_parameters_complete () const {
+	return
+		with_file && (_file == nullptr) &&
+		_svg_cell.has_value() && _extra_border_width.has_value() &&
+		_left_cells.has_value() && _right_cells.has_value() &&
+		_lower_cells.has_value() && _upper_cells.has_value();
 }
 
-
-
 bool Chart::chart_complete () const {
+	if (with_file != (_file != nullptr)) {
+		return false;
+	}
 	if (_chart_cell <= 0 || (_delta.has_value() == _scale.has_value())) {
 		return false;
 	}
 	
-	if (file_attached()) {
-		return
-			_extra_border_width.has_value() &&
-			_left_cells.value() >= 0 &&
-			_right_cells.value() >= 0 &&
-			_lower_cells.value() >= 0 &&
-			_upper_cells.value() >= 0 &&
-			_svg_cell.has_value();
+	if (with_file) {
+		return file_parameters_complete();
 	} else {
 		return
 			_begin_externel.has_value() &&
@@ -58,7 +75,7 @@ double Chart::extra_border_width () const {
 
 Chart::Point Chart::begin_internal () const {
 	assert(chart_complete());
-	if (file_attached()) {
+	if (with_file) {
 		return Point(
 			border_width(),
 			extra_border_width() + border_width() + (_lower_cells.value() + _upper_cells.value()) * _svg_cell.value()
@@ -70,7 +87,7 @@ Chart::Point Chart::begin_internal () const {
 
 Chart::Point Chart::end_internal () const {
 	assert(chart_complete());
-	if (file_attached()) {
+	if (with_file) {
 		return Point(
 			(_left_cells.value() + _right_cells.value()) * _svg_cell.value() + border_width() + extra_border_width(),
 			border_width()
@@ -82,7 +99,7 @@ Chart::Point Chart::end_internal () const {
 
 Chart::Point Chart::begin_external () const {
 	assert(chart_complete());
-	if (file_attached()) {
+	if (with_file) {
 		return Point(
 			extra_border_width()
 			, (_lower_cells.value() + _upper_cells.value()) * _svg_cell.value() +
@@ -95,7 +112,7 @@ Chart::Point Chart::begin_external () const {
 
 Chart::Point Chart::end_external () const {
 	assert(chart_complete());
-	if (file_attached()) {
+	if (with_file) {
 		return Point(
 			(_left_cells.value() + _right_cells.value()) * _svg_cell.value() +
 			2 * (border_width() + extra_border_width()),
@@ -110,7 +127,7 @@ Chart::Point Chart::end_external () const {
 
 double Chart::internal_chart_width () const {
 	assert(chart_complete());
-	if (file_attached()) {
+	if (with_file) {
 		return (_left_cells.value() + _right_cells.value()) * _svg_cell.value();
 	} else {
 		return _end_externel->x - _begin_externel->x - 2 * border_width();
@@ -119,7 +136,7 @@ double Chart::internal_chart_width () const {
 
 double Chart::external_chart_width () const {
 	assert(chart_complete());
-	if (file_attached()) {
+	if (with_file) {
 		return (_left_cells.value() + _right_cells.value()) * _svg_cell.value() + 2 * border_width();
 	} else {
 		return _end_externel->x - _begin_externel->x;
@@ -128,7 +145,7 @@ double Chart::external_chart_width () const {
 
 double Chart::internal_chart_height () const {
 	assert(chart_complete());
-	if (file_attached()) {
+	if (with_file) {
 		return (_lower_cells.value() + _upper_cells.value()) * _svg_cell.value();
 	} else {
 		return _begin_externel->y - _end_externel->y - 2 * border_width();
@@ -137,7 +154,7 @@ double Chart::internal_chart_height () const {
 
 double Chart::external_chart_height () const {
 	assert(chart_complete());
-	if (file_attached()) {
+	if (with_file) {
 		return (_lower_cells.value() + _upper_cells.value()) * _svg_cell.value() + 2 * border_width();
 	} else {
 		return _begin_externel->y - _end_externel->y;
@@ -148,7 +165,7 @@ double Chart::external_chart_height () const {
 
 Chart::Point Chart::svg_origin () const {
 	assert(chart_complete());
-	if (file_attached()) {
+	if (with_file) {
 		return Point(
 			extra_border_width() + border_width() + _left_cells.value() * _svg_cell.value(),
 			extra_border_width() + border_width() + _upper_cells.value() * _svg_cell.value()
@@ -220,24 +237,79 @@ Chart::Chart (Chart::Point chart_origin_, double chart_cell_, uint16_t scale_) :
 
 
 void Chart::set_axis_width (double width) {
-
+	_axis_width = width;
 }
 
 void Chart::set_border_width (double width) {
-
+	_border_width = width;
 }
 
 
 
-void Chart::set_chart_with_file (File & file, double left, double right, double lower, double upper, double cell) {
+void Chart::set_with_file () {
+	with_file = true;
+	_begin_externel = std::nullopt;
+	_end_externel = std::nullopt;
+	
+	_svg_origin = std::nullopt;
+	_svg_origin_relative = std::nullopt;
+	
+	_cell_count = std::nullopt;
+}
 
+void Chart::set_without_file () {
+	with_file = false;
+	_extra_border_width = std::nullopt;
+	
+	_left_cells = std::nullopt;
+	_right_cells = std::nullopt;
+	_lower_cells = std::nullopt;
+	_upper_cells = std::nullopt;
 }
 
 
+
+void Chart::set_file (File & file) {
+	_file = &file;
+	update_file();
+}
 
 void Chart::erase_file () {
-
+	_file = nullptr;
 }
+
+void Chart::set_chart_size (double left, double right, double lower, double upper) {
+	_left_cells = left;
+	_right_cells = right;
+	_lower_cells = lower;
+	_upper_cells = upper;
+	update_file();
+}
+
+void Chart::set_cell (double cell) {
+	_svg_cell = cell;
+	update_file();
+}
+
+void Chart::set_extra_border_width (double extra_border_width) {
+	_extra_border_width = extra_border_width;
+	update_file();
+}
+
+void Chart::set_chart_with_file (File & file, double left, double right, double lower, double upper, double cell) {
+	_file = &file;
+	_left_cells = left;
+	_right_cells = right;
+	_lower_cells = lower;
+	_upper_cells = upper;
+	_svg_cell = cell;
+	_extra_border_width = border_width();
+	update_file();
+}
+
+
+
+
 
 
 

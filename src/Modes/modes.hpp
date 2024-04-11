@@ -1,3 +1,7 @@
-#include "ornstein.hpp"
-#include "check.hpp"
 #include "includes.hpp"
+
+namespace modes::working {
+
+void graphics_check ();
+
+} // namespace modes::working

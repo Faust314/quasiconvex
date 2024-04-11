@@ -1,7 +1,7 @@
 #include "basic.hpp"
 
-#include "../../Utils/time_utils.hpp"
-#include "../../Utils/type_utils.hpp"
+#include "../../Utils/Basic/time_utils.hpp"
+#include "../../Utils/Basic/type_utils.hpp"
 
 #include <cassert>
 #include <utility>

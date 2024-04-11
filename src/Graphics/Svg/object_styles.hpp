@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <array>
 
 namespace graphics::svg::object {
 
@@ -42,8 +43,8 @@ struct Stroke {
 	friend std::string style(Fill const & fill, Stroke const & stroke);
 	
 //private:
-	static const std::array<std::string, 3> linecaps;
-	static const std::array<std::string, 3> linejoins;
+	constexpr static std::array<std::string, 3> linecaps{"butt", "round", "square"};
+	constexpr static std::array<std::string, 3> linejoins{"bevel", "round", "miter"};
 	
 public:
 	enum class Linecap {butt, round, square};

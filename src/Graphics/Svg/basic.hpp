@@ -6,6 +6,7 @@
 #include <fstream>
 #include <functional>
 #include <string>
+#include <cstdint>
 
 namespace graphics::svg {
 

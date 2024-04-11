@@ -1,0 +1,32 @@
+- Custom
+- Modes
+- Configuration
+  - Settings
+  - DirStruct
+- DataProcessing
+- Processors
+- Utils
+  - Struct
+    - Dir
+    - Cmd
+    - Cmd_args
+- Array
+  - Point
+  - Basic
+- Math
+  - Random
+  - Functions
+  - Planimetry
+  - Stereometry
+- Algo
+  - Convex
+    - 1d
+    - 2d
+- Graphics
+  - Colors
+    - rgb
+    - rgbo
+  - 2d
+    - svg_functions
+  - 3d
+- 

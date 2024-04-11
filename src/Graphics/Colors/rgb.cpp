@@ -1,8 +1,9 @@
 #include "rgb.hpp"
 
-#include "../../Utils/format_utils.hpp"
+#include "../../Utils/Basic/format_utils.hpp"
 
 #include <bitset>
+#include <cstdint>
 
 namespace graphics {
 

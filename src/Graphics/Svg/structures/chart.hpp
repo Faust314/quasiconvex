@@ -11,7 +11,7 @@ struct Chart {
 	
 private:
 	File * _file = nullptr;
-	bool with_file;
+	bool with_file = false;
 	
 	double _axis_width = 4;
 	double _border_width = 24;
@@ -46,11 +46,13 @@ private:
 	std::optional<double> _delta = std::nullopt;
 	std::optional<uint16_t> _scale = 20;
 	
+	void update_file ();
+	
 public:
 	File const * get_file () const;
-	bool file_attached () const;
 	
 	bool chart_complete () const;
+	bool file_parameters_complete () const;
 	
 	double axis_width () const;
 	double border_width () const;
@@ -87,10 +89,19 @@ public:
 	void set_axis_width (double width);
 	void set_border_width (double width);
 	
-	void set_chart_with_file (File & file, double left, double right, double lower, double upper, double cell);
-	void set_file (File & file);
 	
+	
+	void set_with_file();
+	void set_without_file();
+	
+	void set_file (File & file);
 	void erase_file();
+	void set_chart_size (double left, double right, double lower, double upper);
+	void set_cell (double cell);
+	void set_extra_border_width(double extra_border_width);
+	void set_chart_with_file (File & file, double left, double right, double lower, double upper, double cell);
+	
+	
 	
 	void set_external_border (Point begin, Point end);
 	void set_external_border (File const & file);

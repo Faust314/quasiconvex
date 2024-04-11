@@ -94,9 +94,6 @@ std::string Stroke::operator() () const {
 	return stroke;
 }
 
-std::array<std::string, 3> const  Stroke::linecaps = {"butt", "round", "square"};
-std::array<std::string, 3> const Stroke::linejoins = {"bevel", "round", "miter"};
-
 
 
 std::string style(Stroke const & stroke) {
