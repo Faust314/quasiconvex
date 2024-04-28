@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Colors/rgb.hpp"
+#include "../Color/rgb.hpp"
 
 #include <string>
 #include <vector>
@@ -9,11 +9,11 @@
 namespace graphics::svg::object {
 
 struct RGB_O {
-	RGB rgb;
+	color::RGB rgb;
 	double t; // opacity
 	
 	explicit RGB_O (uint8_t r = 0, uint8_t g = 0, uint8_t b = 0, double t_ = 1);
-	explicit RGB_O (RGB const & rgb, double t_ = 1);
+	explicit RGB_O (color::RGB const & rgb, double t_ = 1);
 };
 
 

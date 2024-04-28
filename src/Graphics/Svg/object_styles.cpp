@@ -7,7 +7,7 @@ RGB_O::RGB_O (uint8_t r, uint8_t g, uint8_t b, double t_) :
 	t(t_)
 { }
 
-RGB_O::RGB_O (RGB const & rgb_, double t_) :
+RGB_O::RGB_O (color::RGB const & rgb_, double t_) :
 	rgb(rgb_),
 	t(t_)
 { }
