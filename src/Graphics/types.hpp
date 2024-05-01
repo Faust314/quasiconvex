@@ -7,6 +7,8 @@
 namespace graphics {
 
 typedef double coord_t;
+typedef uint16_t group_id_t;
+typedef uint32_t object_id_t;
 
 namespace color {
 

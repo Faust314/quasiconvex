@@ -5,10 +5,10 @@
 
 namespace graphics::twodim {
 
-class Style {
+class Paint {
 public:
-	Style (paint::Fill const & fill_, paint::Stroke const & stroke_);
-	Style (
+	Paint (paint::Fill const & fill_, paint::Stroke const & stroke_);
+	Paint (
 		color::RGB_O fill_color,
 		color::RGB_O stroke_color,
 		coord_t width,
@@ -16,11 +16,11 @@ public:
 		Linejoin linejoin = Linejoin::round
 	);
 	
-	Style (paint::Fill const & fill_);
-	Style (color::RGB_O fill_color);
+	Paint (paint::Fill const & fill_);
+	Paint (color::RGB_O fill_color);
 	
-	Style (paint::Stroke const stroke_);
-	Style (
+	Paint (paint::Stroke const stroke_);
+	Paint (
 		color::RGB_O color_,
 		coord_t width_,
 		Linecap linecap = Linecap::round,

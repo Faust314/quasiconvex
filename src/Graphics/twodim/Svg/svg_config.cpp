@@ -8,7 +8,6 @@
 
 namespace graphics::twodim::svg {
 
-
 void OutputParameters::init (std::ofstream & ofs_) {
 	_ofs = & ofs_;
 }
@@ -41,12 +40,14 @@ std::string const & OutputParameters::space () const {
 
 
 
-void set_settings (Settings const & settings) {
-	
+
+
+void Settings::init_pointers () {
+	str::settings = this;
 }
 
-void set_output_parameters (OutputParameters & parameters) {
-	
+void OutputParameters::init_pointers () {
+	str::parameters = this;
 }
 
 } // namespace graphics::twodim::svg

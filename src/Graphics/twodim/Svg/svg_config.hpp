@@ -37,10 +37,10 @@ public:
 	void set_ofs (std::ofstream & ofs_);
 	std::ofstream & ofs ();
 	
-	void init_pointers ();
-	
 	void change_space (param_t const diff);
 	std::string const & space () const;
+	
+	void init_pointers ();
 	
 private:
 	std::ofstream * _ofs = nullptr;
