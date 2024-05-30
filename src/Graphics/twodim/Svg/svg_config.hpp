@@ -34,11 +34,11 @@ public:
 	void init (std::ofstream & ofs_);
 	OutputParameters (std::ofstream & ofs_);
 	
-	void set_ofs (std::ofstream & ofs_);
 	std::ofstream & ofs ();
-	
-	void change_space (param_t const diff);
 	std::string const & space () const;
+	
+	void set_ofs (std::ofstream & ofs_);
+	void change_space (param_t const diff);
 	
 	void init_pointers ();
 	
