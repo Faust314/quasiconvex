@@ -1,6 +1,6 @@
 #pragma once
 
-#include "colors.hpp"
+#include "color.hpp"
 
 #include "opacity.tpp"
 #include "rgb_o.tpp"

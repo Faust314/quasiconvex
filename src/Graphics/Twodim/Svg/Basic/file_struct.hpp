@@ -8,11 +8,11 @@
 
 namespace graphics::twodim::svg {
 
-struct str {
+struct Str {
 	static void file_begin (coord_t width = settings->display_width, coord_t height = settings->display_height);
 	static void file_end ();
 	
-	static void layer_begin (group_id_t layer_id, std::string const & layer_label;
+	static void layer_begin (group_id_t layer_id, std::string const & layer_label);
 	static void layer_begin (group_id_t layer_id);
 	static void layer_end ();
 	

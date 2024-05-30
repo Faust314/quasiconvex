@@ -1,6 +1,8 @@
 #pragma once
 
-#include "../Graphics/Svg/structures/chart.hpp"
-#include "../Math/algebraic_structures.hpp"
-#include "../Array/basic.hpp"
+#include "../Math/math.tpp"
+#include "../Array/Basic/basic.tpp"
 #include "../Utils/utils.hpp"
+#include "../Configuration/configuration.hpp"
+#include "../Algo/algo.tpp"
+#include "../Graphics/graphics.hpp"

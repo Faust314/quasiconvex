@@ -1,7 +1,7 @@
 #include "Modes/modes.hpp"
 
 int main() {
-	modes::working::graphics_check();
+	modes::working::ornstein();
 	
 	return 0;
 }

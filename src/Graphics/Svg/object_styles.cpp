@@ -37,7 +37,7 @@ Fill::Fill (RGB_O color_) :
 std::string Fill::operator() () const {
 	std::string fill;
 	if (empty) {
-		fill == "fill:none";
+		fill = "fill:none";
 		return fill;
 	}
 	fill += "stroke:#" + color.rgb.to_string_16() + ";";

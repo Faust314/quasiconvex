@@ -4,11 +4,11 @@
 
 class DirStruct {
 public:
-	DirStruct() = default;
+	DirStruct () = default;
 	
-	std::string get_working_catalog() const;
+	std::string get_working_catalog () const;
 	
-	void basic_init();
+	void basic_init (std::string working_dir_name);
 	
 private:
 	std::string catalog;

@@ -43,11 +43,11 @@ std::string const & OutputParameters::space () const {
 
 
 void Settings::init_pointers () {
-	str::settings = this;
+	Str::settings = this;
 }
 
 void OutputParameters::init_pointers () {
-	str::parameters = this;
+	Str::parameters = this;
 }
 
 } // namespace graphics::twodim::svg

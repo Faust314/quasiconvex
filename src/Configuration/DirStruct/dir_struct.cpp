@@ -9,16 +9,16 @@
 
 #include <iostream>
 
-void DirStruct::basic_init () {
-	catalog = std::filesystem::current_path().parent_path().string();
+void DirStruct::basic_init (std::string working_dir_name) {
+	catalog = std::filesystem::current_path().string();
 	std::replace(catalog.begin(), catalog.end(), '\\', '/');
 	
-	output = catalog + "/~output";
+	output = catalog + "/output";
 	time_t timer = time(nullptr);
-	working_catalog = output + "/" + aux::time::date(timer);
+	working_catalog = output + "/" + working_dir_name;
 	
 	aux::dir::create_directory(output);
-	aux::dir::create_directory(working_catalog);
+	aux::dir::clear_directory(working_catalog);
 }
 
 std::string DirStruct::get_working_catalog () const {

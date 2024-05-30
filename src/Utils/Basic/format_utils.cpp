@@ -13,7 +13,7 @@ std::string uint8_t_to_string_16 (uint8_t a) {
 
 
 
-void set_precision (std::fstream & ofs, precision_t const precision) {
+void set_precision (std::ofstream & ofs, precision_t const precision) {
 	ofs << ::std::fixed << std::setprecision(precision);
 }
 	
