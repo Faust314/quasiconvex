@@ -14,11 +14,11 @@ Fill::Fill (color::RGB_O color_) :
 	_color(color_)
 {}
 
-bool Fill::is_empty () {
+bool Fill::is_empty () const {
 	return _empty;
 }
 
-color::RGB_O const & Fill::color () {
+color::RGB_O const & Fill::color () const {
 	assert(!_empty);
 	return _color;
 }

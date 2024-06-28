@@ -21,4 +21,16 @@ Opacity<Color>::Opacity (double op_, Color const & col_) :
 	assert(0 < op_ && op_ <= 1);
 }
 
+
+
+template <color_c Color>
+bool Opacity<Color>::has_op () const {
+	return op != 255;
+}
+
+template <color_c Color>
+double Opacity<Color>::op_norm () const {
+	return double(op) / 255;
+}
+
 } // namespace graphics::color

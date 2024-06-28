@@ -1,5 +1,8 @@
 #pragma once
 
+#include "../Math/Geometry/Planimetry/point.hpp"
+#include "../Math/Geometry/Planimetry/rectangular.hpp"
+
 #include <cstdint>
 #include <concepts>
 #include <string>
@@ -22,6 +25,9 @@ concept color_c = requires (T t) {
 	std::is_convertible_v<T, RGB>;
 };
 
-} // namespace color
+} // namespace color'
+
+using Point = math::geom::plan::PointT<coord_t>;
+using Rectangular = math::geom::plan::RectangularT<coord_t>;
 
 } // namespace graphics

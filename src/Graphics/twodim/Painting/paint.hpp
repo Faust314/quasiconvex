@@ -1,5 +1,6 @@
 #pragma once
 
+#include "types.hpp"
 #include "fill.hpp"
 #include "stroke.hpp"
 
@@ -27,7 +28,9 @@ public:
 		Linejoin linejoin = Linejoin::round
 	);
 	
+	paint::Fill const & fill() const;
 	paint::Fill & fill();
+	paint::Stroke const & stroke() const;
 	paint::Stroke & stroke();
 	
 private:

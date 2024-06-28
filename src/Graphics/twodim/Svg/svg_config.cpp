@@ -1,53 +1,42 @@
 #include "svg_config.hpp"
 
-#include "Basic/file_struct.hpp"
-#include "Objects/paths.hpp"
-#include "Objects/primitives.hpp"
-
 #include <cassert>
 
 namespace graphics::twodim::svg {
 
-void OutputParameters::init (std::ofstream & ofs_) {
+void Output::init (std::ofstream & ofs_) {
 	_ofs = & ofs_;
 }
 
-OutputParameters::OutputParameters (std::ofstream & ofs_) :
+Output::Output (std::ofstream & ofs_) :
 	_ofs(& ofs_)
 { }
 
 
 
-void OutputParameters::set_ofs (std::ofstream & ofs_) {
-	assert(_ofs != nullptr);
-	_ofs = & ofs_;
-}
-
-std::ofstream & OutputParameters::ofs () {
+std::ofstream & Output::ofs () {
+	(* _ofs) << _space;
 	return * _ofs;
 }
 
+std::ofstream & Output::get_ofs () {
+	return * _ofs;
+}
 
-
-void OutputParameters::change_space (OutputParameters::param_t const diff) {
+void Output::change_space (Output::param_t const diff) {
 	assert(_space.size() + diff >= 0);
 	_space.resize(_space.size() + diff, ' ');
 }
 
-std::string const & OutputParameters::space () const {
+
+
+void Output::set_ofs (std::ofstream & ofs_) {
+	assert(_ofs != nullptr);
+	_ofs = & ofs_;
+}
+
+std::string const & Output::space () const {
 	return _space;
 }
-
-
-
-
-
-void Settings::init_pointers () {
-	str::settings = this;
-}
-
-void OutputParameters::init_pointers () {
-	str::parameters = this;
-}
-
+	
 } // namespace graphics::twodim::svg

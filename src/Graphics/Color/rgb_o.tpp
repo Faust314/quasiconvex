@@ -1,5 +1,6 @@
 #pragma once
 
+#include "opacity.tpp"
 #include "rgb_o.hpp"
 
 namespace graphics::color {

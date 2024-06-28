@@ -44,12 +44,20 @@ Paint::Paint (color::RGB_O color_, coord_t width_, Linecap linecap, Linejoin lin
 
 
 
+paint::Fill const & Paint::fill () const {
+	return _fill;
+}
+
 paint::Fill & Paint::fill () {
 	return _fill;
+}
+
+paint::Stroke const & Paint::stroke () const {
+	return _stroke;
 }
 
 paint::Stroke & Paint::stroke () {
 	return _stroke;
 }
-
+	
 } // namespace graphics::twodim::paint

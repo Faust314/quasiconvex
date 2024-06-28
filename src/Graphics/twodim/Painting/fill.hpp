@@ -11,10 +11,10 @@ public:
 	Fill ();
 	explicit Fill (color::RGB_O color_);
 	
-	bool is_empty ();
+	bool is_empty () const;
 	void clear ();
 	
-	color::RGB_O const & color ();
+	color::RGB_O const & color () const;
 	
 	void assign_color (color::RGB_O const & color_);
 	
