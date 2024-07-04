@@ -177,6 +177,7 @@ void FileStructs::painting (Paint const & paint) const {
 
 void FileStructs::object_end () const {
 	_output->get_ofs() << " />";
+	_output->change_space(-3);
 }
 
 } // namespace graphics::two_dim::svg

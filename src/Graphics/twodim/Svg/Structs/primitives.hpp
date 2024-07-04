@@ -23,38 +23,40 @@ struct Primitives {
 	
 	
 	void circle_begin ();
-	void circle_id ();
+	void circle_id (object_id_t id);
 	
 	void circle (Point const & p, coord_t r);
 	
 	
 	
 	void ellipse_begin ();
-	void ellipse_id ();
+	void ellipse_id (object_id_t id);
 	
 	void ellipse (Point const & p, coord_t rx, coord_t ry);
 	
 	
 	
 	void line_begin ();
-	void line_id ();
+	void line_id (object_id_t id);
 	
 	void line (Point const & p1, Point const & p2);
 	
 	
 	
 	void polyline_begin ();
-	void polyline_id ();
-	void polyline_next_point ();
+	void polyline_id (object_id_t id);
 	
+	void polyline_start (Point const & p);
+	void polyline_stop ();
 	void polyline_point (Point const & p);
 	
 	
 	
 	void polygon_begin ();
-	void polygon_id ();
-	void polygon_next_point ();
+	void polygon_id (object_id_t id);
 	
+	void polygon_start (Point const & p);
+	void polygon_stop ();
 	void polygon_point (Point const & p);
 	
 private:

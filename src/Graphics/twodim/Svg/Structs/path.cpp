@@ -29,7 +29,7 @@ void Path::path_id (object_id_t id) const {
 
 
 void Path::start (Point const & p) const {
-	_output->get_ofs() << "M " << p.x << " " << p.y;
+	_output->ofs() << "d=\"M " << p.x << " " << p.y;
 }
 
 void Path::Move (Point const & p) const {
@@ -38,6 +38,10 @@ void Path::Move (Point const & p) const {
 
 void Path::move (Point const & dp) const {
 	_output->get_ofs() << " m " << dp.x << " " << dp.y;
+}
+
+void Path::stop () const {
+	_output->get_ofs() << "\"";
 }
 
 

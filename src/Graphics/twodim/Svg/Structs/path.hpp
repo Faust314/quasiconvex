@@ -18,6 +18,7 @@ public:
 	void path_id (object_id_t id) const;
 	
 	void start (Point const & p) const;
+	void stop () const;
 	void Move (Point const & p) const;
 	void move (Point const & dp) const;
 	
