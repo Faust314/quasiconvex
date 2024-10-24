@@ -1,7 +1,7 @@
 #pragma once
 
 #include "rectangular.hpp"
-#include "../../../Utils/Basic/math_utils.hpp"
+#include "../../../../Utils/Basic/math_utils.hpp"
 
 #include <cassert>
 #include <cmath>
@@ -62,6 +62,18 @@ coord_t RectangularT<coord_t>::y0 () const {
 
 
 template <Coord_t coord_t>
+coord_t RectangularT<coord_t>::det () const {
+	return _a * _b;
+}
+
+template <Coord_t coord_t>
+bool RectangularT<coord_t>::is_orthogonal () const {
+	return std::abs(std::abs(_a) - std::abs(_b)) < error;
+}
+
+
+
+template <Coord_t coord_t>
 RectangularT<coord_t> RectangularT<coord_t>::operator* (RectangularT<coord_t> const & rect) {
 	return RectangularT<coord_t> (
 		_a * rect._a, _b * rect._b,
@@ -92,7 +104,12 @@ void RectangularT<coord_t>::inverse () const requires is_float {
 
 
 template <Coord_t coord_t>
-PointT<coord_t> RectangularT<coord_t>::operator() (PointT<coord_t> const & point) {
+void RectangularT<coord_t>::apply (PointT<coord_t> & point) const {
+	point = {_a * point.x + _x0, _b * point.y + _y0};
+}
+
+template <Coord_t coord_t>
+PointT<coord_t> RectangularT<coord_t>::operator() (PointT<coord_t> const & point) const {
 	return {_a * point.x + _x0, _b * point.y + _y0};
 }
 

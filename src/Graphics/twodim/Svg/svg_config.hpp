@@ -31,18 +31,18 @@ public:
 	
 public:
 	Output () = default;
-	void init (std::ofstream & ofs_);
-	Output (std::ofstream & ofs_);
+	void init (std::ostream & os_);
+	explicit Output (std::ostream & os_);
 	
-	std::ofstream & ofs ();
-	std::ofstream & get_ofs ();
+	std::ostream & os ();
+	std::ostream & get_os ();
 	std::string const & space () const;
 	
-	void set_ofs (std::ofstream & ofs_);
+	void set_os (std::ostream & os_);
 	void change_space (param_t const diff);
 	
 private:
-	std::ofstream * _ofs = nullptr;
+	std::ostream * _os = nullptr;
 	std::string _space = "\n";
 };
 

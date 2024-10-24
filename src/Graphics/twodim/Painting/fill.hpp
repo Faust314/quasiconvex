@@ -4,7 +4,7 @@
 
 #include <optional>
 
-namespace graphics::twodim::paint {
+namespace graphics::twodim::painting {
 
 class Fill {
 public:

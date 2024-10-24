@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../parameters.hpp"
+#include "../types.hpp"
 
 namespace math::geom::plan {
 
 template <Coord_t coord_t>
 class PointT {
-public:
+private:
 	using real_t = Real_t<coord_t>;
 	constexpr static bool is_float = Float_t<coord_t>;
 	
@@ -58,10 +58,6 @@ public:
 	void norm () requires is_float;
 	void reflect ();
 	void rotate (coord_t angle) requires is_float;
-	
-private:
-	coord_t _x;
-	coord_t _y;
 };
 
 

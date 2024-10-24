@@ -2,7 +2,7 @@
 
 namespace graphics::twodim {
 
-Paint::Paint (paint::Fill const & fill_, paint::Stroke const & stroke_) :
+Paint::Paint (painting::Fill const & fill_, painting::Stroke const & stroke_) :
 	_fill(fill_),
 	_stroke(stroke_)
 {}
@@ -20,7 +20,7 @@ Paint::Paint (
 
 
 
-Paint::Paint (paint::Fill const & fill_) :
+Paint::Paint (painting::Fill const & fill_) :
 	_fill(fill_),
 	_stroke()
 {}
@@ -32,7 +32,7 @@ Paint::Paint (color::RGB_O fill_color) :
 
 
 
-Paint::Paint (paint::Stroke const stroke_) :
+Paint::Paint (painting::Stroke const stroke_) :
 	_fill(),
 	_stroke(stroke_)
 {}
@@ -44,19 +44,19 @@ Paint::Paint (color::RGB_O color_, coord_t width_, Linecap linecap, Linejoin lin
 
 
 
-paint::Fill const & Paint::fill () const {
+painting::Fill const & Paint::fill () const {
 	return _fill;
 }
 
-paint::Fill & Paint::fill () {
+painting::Fill & Paint::fill () {
 	return _fill;
 }
 
-paint::Stroke const & Paint::stroke () const {
+painting::Stroke const & Paint::stroke () const {
 	return _stroke;
 }
 
-paint::Stroke & Paint::stroke () {
+painting::Stroke & Paint::stroke () {
 	return _stroke;
 }
 	

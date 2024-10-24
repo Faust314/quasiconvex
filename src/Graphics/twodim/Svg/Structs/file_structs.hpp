@@ -2,7 +2,7 @@
 
 #include "../../../types.hpp"
 #include "../svg_config.hpp"
-#include "../../Painting/painting.hpp"
+#include "../../Painting/_painting.hpp"
 
 namespace graphics::twodim::svg {
 
@@ -19,9 +19,9 @@ struct FileStructs {
 	void group_begin (group_id_t group_id) const;
 	void group_end () const;
 	
-	void painting (paint::Fill const & fill) const;
-	void painting (paint::Stroke const & stroke) const;
-	void painting (paint::Fill const & fill, paint::Stroke const & stroke) const;
+	void painting (painting::Fill const & fill) const;
+	void painting (painting::Stroke const & stroke) const;
+	void painting (painting::Fill const & fill, painting::Stroke const & stroke) const;
 	void painting (Paint const & paint) const;
 	
 	void object_end () const;

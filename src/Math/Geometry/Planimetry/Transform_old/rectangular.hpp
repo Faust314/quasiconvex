@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../parameters.hpp"
-#include "point.hpp"
+#include "../../types.hpp"
+#include "../point.hpp"
 
 #include <cstdint>
 
@@ -18,19 +18,23 @@ public:
 	RectangularT (coord_t a_, coord_t b_, coord_t x0_, coord_t y0_);
 	RectangularT (coord_t a_, coord_t b_, PointT<coord_t> const & shift);
 	RectangularT (coord_t x0_, coord_t y0_);
-	RectangularT (PointT<coord_t> const & shift);
+	explicit RectangularT (PointT<coord_t> const & shift);
 	
 	coord_t a () const;
 	coord_t b () const;
 	coord_t x0 () const;
 	coord_t y0 () const;
 	
+	coord_t det () const;
+	bool is_orthogonal () const;
+	
 	RectangularT operator* (RectangularT<coord_t> const & rect);
 	
 	RectangularT<real_t> get_inverse () const;
 	void inverse () const requires is_float;
 	
-	PointT<coord_t> operator() (PointT<coord_t> const & point);
+	void apply (PointT<coord_t> & point) const;
+	PointT<coord_t> operator() (PointT<coord_t> const & point) const;
 	
 private:
 	coord_t _a;
@@ -38,6 +42,8 @@ private:
 	coord_t _x0;
 	coord_t _y0;
 };
+
+
 
 template <Float_t coord_t>
 RectangularT<coord_t> rectangular_translate (

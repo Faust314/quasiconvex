@@ -15,30 +15,30 @@ Primitives::Primitives (Output & output) :
 
 
 
-void Primitives::rect_begin () {
-	_output->ofs() << "<rect";
+void Primitives::rect_begin () const {
+	_output->os() << "<rect";
 	_output->change_space(3);
 }
 
-void Primitives::rect_id (object_id_t id) {
-	_output->ofs() << "id=\"rect" << id << "\"";
+void Primitives::rect_id (object_id_t id) const {
+	_output->os() << "id=\"rect" << id << "\"";
 }
 
 
 
-void Primitives::rect (Point const & p, coord_t width, coord_t height) {
-	_output->ofs() << "x=\"" << p.x << "\" y=\"" << p.y <<
+void Primitives::rect (Point const & p, coord_t width, coord_t height) const {
+	_output->os() << "x=\"" << p.x << "\" y=\"" << p.y <<
 		"\" width=\"" << width << "\" height=\"" << height << "\"";
 }
 
-void Primitives::rect (Point const & p, coord_t width, coord_t height, coord_t r) {
-	_output->ofs() << "x=\"" << p.x << "\" y=\"" << p.y <<
+void Primitives::rect (Point const & p, coord_t width, coord_t height, coord_t r) const {
+	_output->os() << "x=\"" << p.x << "\" y=\"" << p.y <<
 		"\" width=\"" << width << "\" height=\"" << height <<
 		"\" rx=\"" << r << "\" ry=\"" << r << "\"";
 }
 
-void Primitives::rect (Point const & p, coord_t width, coord_t height, coord_t rx, coord_t ry) {
-	_output->ofs() << "x=\"" << p.x << "\" y=\"" << p.y <<
+void Primitives::rect (Point const & p, coord_t width, coord_t height, coord_t rx, coord_t ry) const {
+	_output->os() << "x=\"" << p.x << "\" y=\"" << p.y <<
 		"\" width=\"" << width << "\" height=\"" << height <<
 		"\" rx=\"" << rx << "\" ry=\"" << ry << "\"";
 }
@@ -47,113 +47,113 @@ void Primitives::rect (Point const & p, coord_t width, coord_t height, coord_t r
 
 
 
-void Primitives::circle_begin () {
-	_output->ofs() << "<circle";
+void Primitives::circle_begin () const {
+	_output->os() << "<circle";
 	_output->change_space(3);
 }
 
-void Primitives::circle_id (object_id_t id) {
-	_output->ofs() << "id=\"circle" << id << "\"";
+void Primitives::circle_id (object_id_t id) const {
+	_output->os() << "id=\"circle" << id << "\"";
 }
 
 
 
-void Primitives::circle (Point const & p, coord_t r) {
-	_output->ofs() << "cx=\"" << p.x << "\" cy=" << p.y << "\" r=\"" << r << "\""; 
+void Primitives::circle (Point const & p, coord_t r) const {
+	_output->os() << "cx=\"" << p.x << "\" cy=" << p.y << "\" r=\"" << r << "\""; 
 }
 
 
 
 
 
-void Primitives::ellipse_begin () {
-	_output->ofs() << "<ellipse";
+void Primitives::ellipse_begin () const {
+	_output->os() << "<ellipse";
 	_output->change_space(3);
 }
 
-void Primitives::ellipse_id (object_id_t id) {
-	_output->ofs() << "id=\"ellipse" << id << "\"";
+void Primitives::ellipse_id (object_id_t id) const {
+	_output->os() << "id=\"ellipse" << id << "\"";
 }
 
 
 
-void Primitives::ellipse (Point const & p, coord_t rx, coord_t ry) {
-	_output->ofs() << "cx=\"" << p.x << "\" cy=\"" << p.y << "\" rx=\"" << rx << "\" ry=\"" << ry << "\"";
+void Primitives::ellipse (Point const & p, coord_t rx, coord_t ry) const {
+	_output->os() << "cx=\"" << p.x << "\" cy=\"" << p.y << "\" rx=\"" << rx << "\" ry=\"" << ry << "\"";
 }
 
 
 
 
 
-void Primitives::line_begin () {
-	_output->ofs() << "<line";
+void Primitives::line_begin () const {
+	_output->os() << "<line";
 	_output->change_space(3);
 }
 
-void Primitives::line_id (object_id_t id) {
-	_output->ofs() << "id=\"line" << id << "\"";
+void Primitives::line_id (object_id_t id) const {
+	_output->os() << "id=\"line" << id << "\"";
 }
 
 
 
-void Primitives::line (Point const & p1, Point const & p2) {
-	_output->ofs() << "x1=\"" << p1.x << "\" x2=\"" << p2.x << "\" y1=\"" << p1.y << "\" y2=\"" << p2.y << "\"";
+void Primitives::line (Point const & p1, Point const & p2) const {
+	_output->os() << "x1=\"" << p1.x << "\" x2=\"" << p2.x << "\" y1=\"" << p1.y << "\" y2=\"" << p2.y << "\"";
 }
 
 
 
 
 
-void Primitives::polyline_begin () {
-	_output->ofs() << "<polyline";
+void Primitives::polyline_begin () const {
+	_output->os() << "<polyline";
 	_output->change_space(3);
 }
 
-void Primitives::polyline_id (object_id_t id) {
-	_output->ofs() << "id=\"polyline" << id << "\"";
+void Primitives::polyline_id (object_id_t id) const {
+	_output->os() << "id=\"polyline" << id << "\"";
 }
 
 
 
-void Primitives::polyline_start (Point const & p) {
-	_output->ofs() << "points=\"" << p.x << " " << p.y;
+void Primitives::polyline_start (Point const & p) const {
+	_output->os() << "points=\"" << p.x << " " << p.y;
 }
 
-void Primitives::polyline_stop () {
-	_output->ofs() << "\"";
+void Primitives::polyline_stop () const {
+	_output->os() << "\"";
 }
 
-void Primitives::polyline_point (Point const & p) {
-	_output->ofs() << ", " << p.x << " " << p.y;
+void Primitives::polyline_point (Point const & p) const {
+	_output->os() << ", " << p.x << " " << p.y;
 }
 
 
 
 
 
-void Primitives::polygon_begin () {
-	_output->ofs() << "<polygon";
+void Primitives::polygon_begin () const {
+	_output->os() << "<polygon";
 	_output->change_space(3);
 }
 
-void Primitives::polygon_id (object_id_t id) {
-	_output->ofs() << "id=\"polygon" << id << "\"";
+void Primitives::polygon_id (object_id_t id) const {
+	_output->os() << "id=\"polygon" << id << "\"";
 }
 
 
 
 
 
-void Primitives::polygon_start (Point const & p) {
-	_output->ofs() << "points=\"" << p.x << " " << p.y;
+void Primitives::polygon_start (Point const & p) const {
+	_output->os() << "points=\"" << p.x << " " << p.y;
 }
 
-void Primitives::polygon_stop () {
-	_output->ofs() << "\"";
+void Primitives::polygon_stop () const {
+	_output->os() << "\"";
 }
 
-void Primitives::polygon_point (Point const & p) {
-	_output->ofs() << ", " << p.x << " " << p.y;
+void Primitives::polygon_point (Point const & p) const {
+	_output->os() << ", " << p.x << " " << p.y;
 }
 	
 } // namespace graphics::twodim::svg

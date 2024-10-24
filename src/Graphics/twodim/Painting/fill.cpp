@@ -3,7 +3,7 @@
 
 #include <cassert>
 
-namespace graphics::twodim::paint {
+namespace graphics::twodim::painting {
 
 Fill::Fill () :
 	_empty(true)

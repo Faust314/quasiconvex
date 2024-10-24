@@ -4,23 +4,23 @@
 
 namespace graphics::twodim::svg {
 
-void Output::init (std::ofstream & ofs_) {
-	_ofs = & ofs_;
+void Output::init (std::ostream & os_) {
+	_os = & os_;
 }
 
-Output::Output (std::ofstream & ofs_) :
-	_ofs(& ofs_)
+Output::Output (std::ostream & os_) :
+	_os(& os_)
 { }
 
 
 
-std::ofstream & Output::ofs () {
-	(* _ofs) << _space;
-	return * _ofs;
+std::ostream & Output::os () {
+	(* _os) << _space;
+	return * _os;
 }
 
-std::ofstream & Output::get_ofs () {
-	return * _ofs;
+std::ostream & Output::get_os () {
+	return * _os;
 }
 
 void Output::change_space (Output::param_t const diff) {
@@ -30,9 +30,9 @@ void Output::change_space (Output::param_t const diff) {
 
 
 
-void Output::set_ofs (std::ofstream & ofs_) {
-	assert(_ofs != nullptr);
-	_ofs = & ofs_;
+void Output::set_os (std::ostream & os_) {
+	assert(_os != nullptr);
+	_os = & os_;
 }
 
 std::string const & Output::space () const {

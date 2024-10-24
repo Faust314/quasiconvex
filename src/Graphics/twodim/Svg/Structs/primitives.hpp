@@ -13,51 +13,51 @@ struct Primitives {
 	
 	
 	
-	void rect_begin ();
-	void rect_id (object_id_t id);
+	void rect_begin () const;
+	void rect_id (object_id_t id) const;
 	
-	void rect (Point const & p, coord_t width, coord_t height);
-	void rect (Point const & p, coord_t width, coord_t height, coord_t r);
-	void rect (Point const & p, coord_t width, coord_t height, coord_t rx, coord_t ry);
-	
-	
-	
-	void circle_begin ();
-	void circle_id (object_id_t id);
-	
-	void circle (Point const & p, coord_t r);
+	void rect (Point const & p, coord_t width, coord_t height) const;
+	void rect (Point const & p, coord_t width, coord_t height, coord_t r) const;
+	void rect (Point const & p, coord_t width, coord_t height, coord_t rx, coord_t ry) const;
 	
 	
 	
-	void ellipse_begin ();
-	void ellipse_id (object_id_t id);
+	void circle_begin () const;
+	void circle_id (object_id_t id) const;
 	
-	void ellipse (Point const & p, coord_t rx, coord_t ry);
-	
-	
-	
-	void line_begin ();
-	void line_id (object_id_t id);
-	
-	void line (Point const & p1, Point const & p2);
+	void circle (Point const & p, coord_t r) const;
 	
 	
 	
-	void polyline_begin ();
-	void polyline_id (object_id_t id);
+	void ellipse_begin () const;
+	void ellipse_id (object_id_t id) const;
 	
-	void polyline_start (Point const & p);
-	void polyline_stop ();
-	void polyline_point (Point const & p);
+	void ellipse (Point const & p, coord_t rx, coord_t ry) const;
 	
 	
 	
-	void polygon_begin ();
-	void polygon_id (object_id_t id);
+	void line_begin () const;
+	void line_id (object_id_t id) const;
 	
-	void polygon_start (Point const & p);
-	void polygon_stop ();
-	void polygon_point (Point const & p);
+	void line (Point const & p1, Point const & p2) const;
+	
+	
+	
+	void polyline_begin () const;
+	void polyline_id (object_id_t id) const;
+	
+	void polyline_start (Point const & p) const;
+	void polyline_stop () const;
+	void polyline_point (Point const & p) const;
+	
+	
+	
+	void polygon_begin () const;
+	void polygon_id (object_id_t id) const;
+	
+	void polygon_start (Point const & p) const;
+	void polygon_stop () const;
+	void polygon_point (Point const & p) const;
 	
 private:
 	Output * _output;

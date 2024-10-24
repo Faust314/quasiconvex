@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-namespace graphics::twodim::paint {
+namespace graphics::twodim::painting {
 
 
 Stroke::Stroke () :

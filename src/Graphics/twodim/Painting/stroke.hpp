@@ -5,7 +5,7 @@
 
 #include <optional>
 
-namespace graphics::twodim::paint {
+namespace graphics::twodim::painting {
 
 class Stroke {
 public:

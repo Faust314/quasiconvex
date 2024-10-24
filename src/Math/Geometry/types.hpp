@@ -16,7 +16,7 @@ template<typename coord_t>
 concept Float_t = requires () {std::is_floating_point_v<coord_t>;};
 
 template<typename coord_t>
-concept Coord_t = Int_t<coord_t> && Float_t<coord_t>;
+concept Coord_t = Int_t<coord_t> || Float_t<coord_t>;
 
 template<typename coord_t>
 using Real_t = std::conditional<Int_t<coord_t>, double, coord_t>::type;
