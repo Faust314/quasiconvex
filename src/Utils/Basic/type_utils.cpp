@@ -22,4 +22,12 @@ std::string to_string (double x) {
 	return std::to_string(x);
 }
 
+bool is_real (std::string const & s) {
+	char * end_ptr = 0;
+	std::strtod(s.c_str(), & end_ptr);
+	if (* end_ptr != '\0' || end_ptr == s.c_str())
+		return false;
+	return true;
+}
+	
 } // namespace aux::types

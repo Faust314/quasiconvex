@@ -24,5 +24,15 @@ void clear_directory (std::string const & path) {
 	remove_directory(path);
 	std::filesystem::create_directory(path);
 }
+
+
+
+void process_path (std::string const & path) {
+	std::filesystem::path P(path);
+	if (P.has_extension()) {
+		P = P.parent_path();
+	}
+	std::filesystem::create_directories(P);
+}
 	
 } // namespace aux::dir

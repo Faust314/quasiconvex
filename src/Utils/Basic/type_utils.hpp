@@ -9,4 +9,6 @@ std::string lead_zeros (int number, int zeros_count);
 
 std::string to_string (double x);
 
+bool is_real (std::string const & s);
+
 } // namespace aux::types

@@ -1,7 +1,7 @@
 #include "Modes/modes.hpp"
 
 int main() {
-	modes::working::graphics_check();
+	modes::biconcave_mode();
 	
 	return 0;
 }

@@ -160,9 +160,11 @@ void FileStructs::painting (Paint const & paint) const {
 		if (paint.fill().color().has_op()) {
 			_output->get_os() << ";fill-opacity:" << paint.fill().color().op_norm();
 		}
+	} else {
+		_output->get_os() << "fill:none";
 	}
 	if (! paint.stroke().is_empty()) {
-		_output->get_os() << "stroke:#" << paint.stroke().color().col.to_string_16();
+		_output->get_os() << ";stroke:#" << paint.stroke().color().col.to_string_16();
 		if (paint.stroke().color().has_op()) {
 			_output->get_os() << ";stroke-opacity:" << paint.stroke().color().op_norm();
 		}

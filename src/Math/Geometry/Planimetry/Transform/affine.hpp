@@ -1,33 +1,19 @@
 #pragma once
 
-#include "Linear/linear_abstract.hpp"
+#include "../point.tpp"
 
 namespace math::geom::plan {
 
-template <typename coord_t, template<typename coord_t_> class LinearTransform>
-requires LinearT_c<coord_t, LinearTransform<coord_t>>
-class Affine {
-public:
-	Affine () = default;
-	void reset (PointT<coord_t> const & shift);
-	template <typename... Args>
-	void reset (Args... args);
-	template <typename... Args>
-	void reset (PointT<coord_t> const & shift, Args... args);
-	explicit Affine (PointT<coord_t> const & shift);
-	template <typename... Args>
-	Affine (Args... args);
-	template <typename... Args>
-	explicit Affine (PointT<coord_t> const & shift_, Args... args);
+template <Coord_t coord_t>
+struct PlaneAffine {
+	coord_t a = 1;
+	coord_t b = 0;
+	coord_t c = 0;
+	coord_t d = 1;
+	coord_t x0 = 0;
+	coord_t y0 = 0;
 	
-	PointT<coord_t> const & shift () const;
-	LinearTransform<coord_t> const & linear () const;
-	
-	
-	
-private:
-	PointT<coord_t> _shift;
-	LinearTransform<coord_t> _linear;
+	PointT<coord_t> operator() (PointT<coord_t> const & p);
 };
 
 } // namespace math::geom::plan

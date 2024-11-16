@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../Math/Geometry/Planimetry/point.hpp"
-#include "../Math/Geometry/Planimetry/Transform/Linear/diagonal.hpp"
 #include "../Math/Geometry/Planimetry/Transform/affine.hpp"
 #include "../Math/Geometry/Planimetry/types.hpp"
 
@@ -29,14 +28,6 @@ concept color_c = requires (T t) {
 
 } // namespace color'
 
-template <class T>
-concept Transform_t = math::geom::plan::Transform_T<coord_t, T>;
-
 using Point = math::geom::plan::PointT<coord_t>;
-using Rectangular = math::geom::plan::RectangularT<coord_t>;
-using Affine = math::geom::plan::AffineT<coord_t>;
-
-static_assert(Transform_t<Rectangular>, "Class Rectangular is not a Transform.");
-static_assert(Transform_t<Affine>, "Class Affine is not a Transform.");
 
 } // namespace graphics

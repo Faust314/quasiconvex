@@ -59,7 +59,7 @@ void Primitives::circle_id (object_id_t id) const {
 
 
 void Primitives::circle (Point const & p, coord_t r) const {
-	_output->os() << "cx=\"" << p.x << "\" cy=" << p.y << "\" r=\"" << r << "\""; 
+	_output->os() << "cx=\"" << p.x << "\" cy=\"" << p.y << "\" r=\"" << r << "\""; 
 }
 
 

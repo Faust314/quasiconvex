@@ -1,7 +1,7 @@
 #include "includes.hpp"
 
-namespace modes::working {
+namespace modes {
 
-void graphics_check ();
+void biconcave_mode ();
 
-} // namespace modes::working
+} // namespace modes

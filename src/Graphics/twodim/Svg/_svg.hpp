@@ -1,5 +1,4 @@
 #pragma once
 
-#include "../../Svg/basic.hpp"
-#include "../../Svg/object_styles.hpp"
-#include "../../Svg/primitive_objects.hpp"
+#include "svg.hpp"
+#include "svg_config.hpp"
