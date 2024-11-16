@@ -1,0 +1,28 @@
+prev: a;
+next: s;
+switch_profile: e;
+switch_f: f;
+switch_g: g;
+
+screen_width: 1920;
+screen_height: 1080;
+margin: 100;
+
+output_path: output;
+
+color: 1 / (1 + 1000 * t);
+colors_number: 2;
+
+slider0: 0;
+slider1: 1;
+sliders_number: 100;
+
+grid_size: 100 * s;
+steps_count: 200;
+
+left_domain_pos: -7;
+right_domain_pos: 7;
+strip_width: 2 * s;
+
+f: (t + 1) * (t - 0.1) * (t - 1);
+g: (t + 0.3) * (t - 0.7);

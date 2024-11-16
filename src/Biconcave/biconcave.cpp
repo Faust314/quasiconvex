@@ -127,19 +127,19 @@ void Biconcave::print_function (
 	
 	graphics::twodim::painting::Stroke axis_stroke (
 		graphics::color::RGB_O(0, 0, 0),
-		4
+		2
 	);
 	graphics::twodim::Paint func_paint (
 		graphics::twodim::painting::Fill(),
 		graphics::twodim::painting::Stroke(
 			graphics::color::RGB_O(0, 0, 255),
-			4
+			2
 		)
 	);
 	graphics::twodim::Paint circle_paint (
-		graphics::color::RGB_O(0, 255, 0),
-		graphics::color::RGB_O(0, 0, 255),
-		4
+		graphics::color::RGB_O(0, 0, 200),
+		graphics::color::RGB_O(0, 0, 200),
+		0
 	);
 	
 	svg_print.file_structs().file_begin(screen_width, screen_height, file_name);
@@ -183,7 +183,7 @@ void Biconcave::print_function (
 		svg_print.file_structs().painting(circle_paint);
 		svg_print.primitives().circle(func_affine({
 			left_domain_pos + value_t(i) * delta, function({left_domain_pos + value_t(i) * delta, slide_value})
-		}), 6);
+		}), 2);
 		svg_print.file_structs().object_end();
 	}
 	

@@ -18,7 +18,14 @@ void Func::init (std::string const & formula, std::vector<std::string> const & v
 	for (token_id_t token_id = 0; token_id < items.size(); token_id++) {
 		if (
 			items[token_id] == "-" &&
-			(token_id == 0 || items[token_id - 1] == "(")
+			(
+				token_id == 0 ||
+				items[token_id - 1] == left_brace ||
+				items[token_id - 1] == comma ||
+				binary.contains(items[token_id - 1]) ||
+				ternary_first.contains(items[token_id - 1]) ||
+				ternary_second.contains(items[token_id - 1])
+			)
 		) {
 			items[token_id] = "_";
 		}

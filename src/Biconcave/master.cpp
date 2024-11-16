@@ -70,9 +70,9 @@ void Master::read (std::string const & path) {
 	output_path = option_values[8];
 	color_func.init(option_values[9], {"t", "s"});
 	colors_number = std::stoi(option_values[10]);
-	slider0 = std::stod(option_values[11]);
-	slider1 = std::stod(option_values[12]);
-	sliders_number = std::stoi(option_values[13]);
+	slider0 = func::Func(option_values[11], {}).operator()({});
+	slider1 = func::Func(option_values[12], {}).operator()({});
+	sliders_number = steps_count_t(std::roundl(func::Func(option_values[13], {}).operator()({})));
 	grid_size.init(option_values[14], {"s"});
 	steps_count.init(option_values[15], {"s"});
 	left_domain_pos.init(option_values[16], {"s"});
@@ -93,10 +93,10 @@ void Master::run () {
 	settings.program_type = graphics::twodim::svg::Settings::program_type_t::browser;
 	
 	for (steps_count_t step = 0; step < sliders_number; step++) {
-		std::cout << "slider " << step << "\n";
+		std::cout << "slider " << step + 1 << "/" << sliders_number <<"\n";
 		slider = slider0 + step * slider_delta;
 		Biconcave B(settings, screen_width, screen_height, margin, slider);
-		size_t cell_grid = std::lround(grid_size({slider}));
+		size_t cell_grid = std::max(size_t(std::lround(grid_size({slider}))), size_t(1));
 		cell_grid = function_grid_size / cell_grid + (function_grid_size % cell_grid == 0 ? 0 : 1);
 		B.init_array(
 			strip_width({slider}),

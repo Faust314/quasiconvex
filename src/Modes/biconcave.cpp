@@ -11,9 +11,10 @@ void biconcave_mode () {
 	
 	while (! ifs.eof()) {
 		ifs >> settings_file;
-		std::cout << "\n\n" << settings_file << "\n";
+		std::cout << settings_file << "\n";
 		master.read(settings_file + ".txt");
 		master.run();
+		std::cout << "\n\n";
 	}
 }
 
