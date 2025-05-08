@@ -1,5 +1,5 @@
-prev: a;
-next: s;
+prev: q;
+next: w;
 switch_profile: e;
 switch_f: f;
 switch_g: g;
@@ -20,9 +20,9 @@ sliders_number: 100;
 grid_size: 100 * s;
 steps_count: 200;
 
-left_domain_pos: -10;
-right_domain_pos: 10;
+left_domain_pos: -7;
+right_domain_pos: 7;
 strip_width: 2 * s;
 
-f: 0;
-g: 1;
+f: (t + 1) * (t - 0.1) * (t - 1);
+g: (t + 0.3) * (t - 0.7);

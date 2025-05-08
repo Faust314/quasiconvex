@@ -87,7 +87,9 @@ void Master::run () {
 	value_t slider_delta = sliders_number == 1 ? 0 : (slider1 - slider0) / (sliders_number - 1);
 	value_t slider;
 	
+	aux::dir::process_path(output_path);
 	aux::dir::clear_directory(output_path);
+	aux::dir::process_path(output_path);
 	
 	graphics::twodim::svg::Settings settings;
 	settings.program_type = graphics::twodim::svg::Settings::program_type_t::browser;

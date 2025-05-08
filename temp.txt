@@ -1,0 +1,7 @@
+examples/fast/fractal
+examples/fast/fractal_animation
+examples/fast/hole
+examples/fast/indicator
+examples/fast/module
+examples/fast/polynomial
+examples/fast/tram

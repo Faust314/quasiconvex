@@ -1,1 +1,1 @@
-examples/slow/tram
+my_experiments/config
