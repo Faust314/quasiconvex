@@ -70,14 +70,38 @@ value_t const & Function<d>::c () const {
 
 
 template <int d>
-void Function<d>::calculate_convex_hull (uint16_t number) {
-	std::cout << "Calculate convex hull\n";
+void Function<d>::calculate_convex_hull (uint16_t number, uint16_t hom_number, coord_t ratio) {
+//	std::cout << "Calculate convex hull\n";
+	uint16_t k = 0;
 	for (uint16_t i = 0; i < number; i++) {
-		std::cout << i << " \\ " << number << "\n"; 
+		k++;
+//		std::cout << i << " \\ " << number << "\n"; 
 		for (index_t dir = 0; dir < d; dir++) {
 			convex_hull(dir);
 		}
+		if (k == hom_number) {
+			k = 0;
+			calculate_homogeneous(ratio);
+		}
 	}
+}
+
+template <int d>
+void Function<d>::calculate_harmonic_hull (uint16_t number, uint16_t hom_number, coord_t ratio) {
+	std::cout << "Calculate harmonic hull\n";
+	uint16_t k = 0;
+	for (uint16_t i = 0; i < number; i++) {
+		k++;
+		std::cout << i << " \\ " << number << "\n";
+		for (index_t dir = 0; dir < d / 2; dir++) {
+			harmonic_hull(dir * 2, dir * 2 + 1);
+		}
+		if (k == hom_number) {
+			k = 0;
+			calculate_homogeneous(ratio);
+		}
+	}
+//	calculate_homogeneous(ratio);
 }
 
 
@@ -93,6 +117,7 @@ void Function<d>::calculate_linearity () {
 	value_t v0, v1, v2;
 	
 	for (;;) {
+//		std::cout << point[0] << " " << point[1] << " " << point[2] << " " << point[3] << "\n";
 		if (point[index] > _n - 1) {
 			index++;
 			if (index >= d) {
@@ -146,34 +171,50 @@ void Function<d>::init_array () {
 	_values.init(-point, point);
 	_linearity_values.init(-point, point);
 	
+	{
+		ArrayPoint<d> p0;
+		p0.modify([&] (array_coord_t & id) {id = 0;});
+		ArrayPoint<d> p1 = p0;
+		for (int i = 0; i < d; i++) {
+			p1[i] = 1;
+			shifts[i] = _values.get_hash(p1) - _values.get_hash(p0);
+			p1[i] = 0;
+		}
+	}
+	
 	for (array::id_t id = 0; id < _values.volume(); id++) {
 //		_values.get_value(id) = std::numeric_limits<value_t>::max();
-		_values.get_value(id) = 1000;
+		_values.get_value(id) = 1;
 	}
 	
 	index_t index = d - 1;
-	point[d - 1] = -1;
+	point[d - 1] = -_n;
+	
+	array_coord_t max_coord;
 	
 	for (;;) {
-		if (point[index] > 1) {
+		if (point[index] > _n) {
 			index++;
 			if (index >= d) {
 				break;
 			}
-			point[index] += 2;
+			point[index]++;
 			continue;
 		}
 		if (index > 0) {
 			index--;
-			point[index] = -1;
+			point[index] = -_n;
 			continue;
 		}
-		for (array_coord_t x = 1; x <= _n; x++) {
-			_values(point * x) = std::pow(_delta * x, _p);
+		max_coord = std::numeric_limits<array_coord_t>::min();
+		for (index_t i = 0; i < d; i++) {
+			max_coord = std::max(max_coord, std::abs(point[i]));
 		}
-		point[index] += 2;
+		_values(point) = std::pow(_delta * max_coord, _p);
+		point[index]++;
 	}
-	point.modify([this](array_coord_t & id) {id = 1;});
+	
+	point.modify([](array_coord_t & id) {id = 1;});
 	for (array_coord_t x = 1; x <= _n; x++) {
 		_values(point * x) = -_c * std::pow(_delta * x, _p);
 		_values(point * (-x)) = -_c * std::pow(_delta * x, _p);
@@ -219,6 +260,96 @@ void Function<d>::convex_hull (index_t dir) {
 		}
 		point[index]++;
 	}
+}
+
+
+
+template <int d>
+void Function<d>::harmonic_hull (index_t dir1, index_t dir2) {
+	ArrayPoint<d> point;
+	index_t index = d - 1;
+	point[d - 1] = -_n + 1;
+	
+	for (;;) {
+		if (point[index] > _n - 1) {
+			index++;
+			if (index >= d) {
+				break;
+			}
+			point[index]++;
+			continue;
+		}
+		if (index > 0) {
+			index--;
+			point[index] = -_n + 1;
+			continue;
+		}
+		point_harmonic_hull(point, dir1, dir2);
+		point[index]++;
+	}
+}
+
+template <int d>
+void Function<d>::point_harmonic_hull (ArrayPoint<d> point, index_t dir1, index_t dir2) {
+#ifndef NDEBUG
+	for (int i = 0; i < d; i++) {
+		if (point[i] == -_n || point[i] == _n) {
+			assert(false);
+		}
+	}
+	assert(dir1 != dir2);
+#endif
+	array::id_t hash = _values.get_hash(point);
+	_values(point) = std::min(_values(point), (
+		_values.get_value(hash + shifts[dir1]) +
+		_values.get_value(hash - shifts[dir1]) +
+		_values.get_value(hash + shifts[dir2]) +
+		_values.get_value(hash - shifts[dir2])
+	) / 4);
+}
+
+
+
+template <int d>
+void Function<d>::calculate_homogeneous (coord_t ratio) {
+	for (index_t dir = 0; dir < d; dir++) {
+		for (coord_t x : {-_n, _n}) {
+			ArrayPoint<d> point;
+			index_t index = d - 1;
+			point[d - 1] = -_n;
+			for (;;) {
+				if (point[index] > _n) {
+					index++;
+					if (index == dir) {
+						index++;
+					}
+					if (index >= d) {
+						break;
+					}
+					point[index]++;
+					continue;
+				}
+				if (index > 0) {
+					index--;
+					point[index] = -_n;
+					continue;
+				}
+				point[dir] = x;
+				calculate_homogeneous_point(point, ratio);
+				if (index == dir) {
+					point[index] = _n + 1;
+					continue;
+				}
+				point[index]++;
+			}
+		}
+	}
+}
+
+template <int d>
+void Function<d>::calculate_homogeneous_point (ArrayPoint<d> point, coord_t ratio) {
+	Point<d> p = Point<d>(point) * ratio;
+	_values(point) = std::min(_values(point), _values.approxim_value(p) * std::pow(ratio, -_p));
 }
 
 

@@ -24,7 +24,8 @@ public:
 	coord_t const & l () const;
 	value_t const & delta () const;
 	
-	void calculate_convex_hull (uint16_t number = 1);
+	void calculate_convex_hull (uint16_t number, uint16_t hom_number, coord_t ratio);
+	void calculate_harmonic_hull (uint16_t number, uint16_t hom_number, coord_t ratio);
 	
 	void calculate_linearity ();
 	
@@ -55,10 +56,18 @@ private:
 	void init_array ();
 	
 	void convex_hull (index_t dir);
+	void harmonic_hull (index_t dir1, index_t dir2);
+	void point_harmonic_hull (ArrayPoint<d> point, index_t dir1, index_t dir2);
 	
 	array::Basic<linearity, d> _linearity_values;
 	
+	void calculate_homogeneous (coord_t ratio);
+	void calculate_homogeneous_point (ArrayPoint<d> point, coord_t ratio);
+	
 	static bool onedim_linearity (value_t derivative);
+	
+	
+	std::array<coord_t, d> shifts;
 };
 	
 } // namespace ornstein

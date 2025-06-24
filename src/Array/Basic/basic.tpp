@@ -125,7 +125,7 @@ T Basic<T, d>::approxim_value (math::geom::multi::Point<real_coord_t, d> p) requ
 	id_t hypercube_index = 0;
 	Point corner = p.template convert<array_coord_t>(ceil);
 	p -= ::math::geom::multi::Point<double, d>(corner);
-	T buffer(std::pow(2,d));
+	std::array<T, 1 << d> buffer;
 	Point hypercube_point;
 	id_t aux_hypercube_index;
 	

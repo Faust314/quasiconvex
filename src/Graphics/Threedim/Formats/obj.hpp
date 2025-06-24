@@ -33,8 +33,8 @@ public:
 	void add_face (std::vector<object_id_t> const & points);
 	
 private:
-	uint8_t direct[3] = {0, 1, 2};
-	uint8_t reverse[3] = {0, 1, 2};
+	uint8_t direct[3] = {0, 2, 1};
+	uint8_t reverse[3] = {0, 2, 1};
 	
 	void repair_permutation (uint8_t * main, uint8_t * to_repair);
 	bool check_permutation (uint8_t * permutation);
