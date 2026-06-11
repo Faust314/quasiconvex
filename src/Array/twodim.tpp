@@ -116,7 +116,16 @@ void Twodim<value_t>::enable_point (Point const & p) {
 template <typename value_t>
 void Twodim<value_t>::enable_point (value_id_t value_id) {
 	assert(0 <= value_id && value_id < values.size());
-	used[value_id];
+	used[value_id] = true;
+}
+
+
+
+template <typename value_t>
+void Twodim<value_t>::set_values (value_t const & value) {
+	for (coord_t id = 0; id < values.size(); id++) {
+		values[id] = value;
+	}
 }
 
 } // namespace array

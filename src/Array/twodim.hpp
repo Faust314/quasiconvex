@@ -35,6 +35,8 @@ public:
 	inline void enable_point (Point const & p);
 	inline void enable_point (value_id_t value_id);
 	
+	inline void set_values (value_t const & value);
+	
 private:
 	coord_t _x_size = 0;
 	coord_t _y_size = 0;

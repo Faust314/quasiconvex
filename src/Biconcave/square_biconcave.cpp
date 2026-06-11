@@ -3,6 +3,7 @@
 #include "../Utils/Basic/dir_utils.hpp"
 #include "Graphics/threshold.hpp"
 #include "Graphics/combine.hpp"
+#include "../ConvexHull/max_biconcave.tpp"
 
 namespace biconcave {
 
@@ -33,14 +34,16 @@ SquareBiconcave::SquareBiconcave (
 
 void SquareBiconcave::init_array (
 	value_t square_radius_,
-	coord_t grid_size_
+	coord_t grid_radius_length_
 ) {
-	square_grid_length = std::max(coord_t(1), grid_size_);
-	cell_width = square_radius_ / square_grid_length;
-	value_t square_length = (2 * square_grid_length + 1) * cell_width;
+	grid_radius_length = std::max(coord_t(1), grid_radius_length_);
+	grid_length = grid_radius_length_ * 2 + 1;
+	
+	cell_width = square_radius_ / grid_radius_length;
+	value_t square_length = (grid_length - 1) * cell_width;
 	
 	real_array.init(
-		2 * square_grid_length + 1, 2 * square_grid_length + 1,
+		grid_length, grid_length,
 		-1e9
 	);
 	
@@ -55,7 +58,7 @@ void SquareBiconcave::init_array (
 	plane_affine.c = 0;
 	plane_affine.d = scale;
 	
-	Point p0 = {value_t(real_array.x_size() - 1) / 2, value_t(real_array.y_size() - 1) / 2};
+	Point p0 = {value_t(grid_radius_length), value_t(grid_radius_length)};
 	Point p1 = {screen_width / 2, screen_height / 2};
 	Point p = p1 - plane_affine(p0);
 	plane_affine.x0 = p.x;
@@ -64,140 +67,121 @@ void SquareBiconcave::init_array (
 
 
 
-void SquareBiconcave::print_function (
-	std::string const & file_path, std::string const & file_name,
-	func::Func const & function, size_t cell_grid
+template <AddFunc Func>
+void SquareBiconcave::generate_borders (
+	std::mt19937 & gen, Func f, steps_count_t total_steps
 ) {
-	value_t scale;
+	real_array.set_values(-1e9);
+	coord_t a = real_array.x_size();
+	coord_t b = real_array.y_size();
+	std::vector<Point> starts = {Point(0,0), Point(a, 0), Point(a, b), Point(0, b)};
+	std::vector<Point> dirs = {Point(1,0), Point(0,1), Point(-1, 0), Point(0, -1)};
+	std::vector<coord_t> sizes = {a, b, a, b};
 	
-	size_t grid_size = strip_grid_length * cell_grid;
-	value_t delta = (right_domain_pos - left_domain_pos) / value_t(grid_size);
+	class ConvexLine {
+	public:
+		RealArray * arr;
+		void set_line (Point p, Point dir) {
+			b = arr->value_id(p);
+			a = arr->value_id(p + dir) - b;
+		}
+		value_t & operator() (coord_t coord) {
+			return arr->value(a * coord + b);
+		}
+		
+	private:
+		value_id_t a;
+		value_id_t b;
+	};
+	ConvexLine line;
+	line.arr = real_array;
 	
-	value_t min_value = std::numeric_limits<value_t>::max();
-	value_t max_value = std::numeric_limits<value_t>::min();
+	std::vector<std::uniform_int_distribution<coord_t>> distrib;
+	distrib.emplace_back(1, a - 1);
+	distrib.emplace_back(1, b - 1);
 	
-	for (size_t i = 0; i <= grid_size; i++) {
-		min_value = std::min(min_value, function({left_domain_pos + value_t(i) * delta, slide_value}));
-		max_value = std::max(max_value, function({left_domain_pos + value_t(i) * delta, slide_value}));
+	for (uint8_t border_id = 0; border_id < 4; border_id++) {
+		for (coord_t t = 0; t < sizes[border_id]; t++) {
+			real_array.value(starts[border_id] + dirs[border_id] * t) = 0;
+		}
 	}
 	
-	if (std::abs(max_value - min_value) < 1e-9) {
-		scale = (screen_width - 4 * margin) / (right_domain_pos - left_domain_pos);
-	} else {
-		scale = std::min(
-			(screen_height - 4 * margin - cell_diagonal) / (max_value - min_value),
-			(screen_width - 4 * margin - cell_diagonal) / (right_domain_pos - left_domain_pos)
-		);
-	}
-	
-	PlaneAffine func_affine;
-	func_affine.a = scale;
-	func_affine.b = 0;
-	func_affine.c = 0;
-	func_affine.d = - scale;
-	
-	Point p0 = {(right_domain_pos + left_domain_pos) / 2, (min_value + max_value) / 2};
-	Point p1 = {screen_width / 2, screen_height / 2};
-	Point p = p1 - func_affine(p0);
-	
-	func_affine.x0 = p.x;
-	func_affine.y0 = p.y;
-	
-	aux::dir::process_path(file_path);
-	std::ofstream ofs (file_path);
-	graphics::twodim::svg::Print svg_print(ofs, * settings);
-	
-	graphics::twodim::painting::Stroke axis_stroke (
-		graphics::color::RGB_O(0, 0, 0),
-		2
-	);
-	graphics::twodim::Paint func_paint (
-		graphics::twodim::painting::Fill(),
-		graphics::twodim::painting::Stroke(
-			graphics::color::RGB_O(0, 0, 255),
-			2
-		)
-	);
-	graphics::twodim::Paint circle_paint (
-		graphics::color::RGB_O(0, 0, 200),
-		graphics::color::RGB_O(0, 0, 200),
-		0
-	);
-	
-	svg_print.file_structs().file_begin(screen_width, screen_height, file_name);
-	
-	svg_print.primitives().rect_begin();
-	svg_print.file_structs().painting(graphics::twodim::painting::Fill(graphics::color::RGB_O(255, 255, 255)));
-	svg_print.primitives().rect({0,0}, screen_width, screen_height);
-	svg_print.file_structs().object_end();
-	
-	svg_print.primitives().line_begin();
-	svg_print.file_structs().painting(axis_stroke);
-	svg_print.primitives().line(
-		func_affine({left_domain_pos, min_value}) + Point(- margin, margin),
-		func_affine({left_domain_pos, max_value}) + Point(- margin, - margin)
-	);
-	svg_print.file_structs().object_end();
-	
-	svg_print.primitives().line_begin();
-	svg_print.file_structs().painting(axis_stroke);
-	svg_print.primitives().line(
-		func_affine({left_domain_pos, min_value}) + Point(- margin, margin),
-		func_affine({right_domain_pos, min_value}) + Point(margin, margin)
-	);
-	svg_print.file_structs().object_end();
-	
-	svg_print.primitives().polyline_begin();
-	svg_print.file_structs().painting(func_paint);
-	svg_print.primitives().polygon_start(func_affine({left_domain_pos, function({left_domain_pos, slide_value})}));
-	for (size_t i = 1; i <= grid_size; i++) {
-		svg_print.primitives().polyline_point(func_affine({
-			left_domain_pos + value_t(i) * delta, function({left_domain_pos + value_t(i) * delta, slide_value})
-		}));
-	}
-	svg_print.primitives().polyline_stop();
-	svg_print.file_structs().object_end();
-	
-	delta *= cell_grid;
-	
-	for (size_t i = 0; i <= strip_grid_length; i++) {
-		svg_print.primitives().circle_begin();
-		svg_print.file_structs().painting(circle_paint);
-		svg_print.primitives().circle(func_affine({
-			left_domain_pos + value_t(i) * delta, function({left_domain_pos + value_t(i) * delta, slide_value})
-		}), 2);
-		svg_print.file_structs().object_end();
-	}
-	
-	svg_print.file_structs().file_end();
-}
-
-
-
-void SquareBiconcave::init_array_border_values (func::Func const & f, func::Func const & g) {
-	for (coord_t i = 0; i <= strip_grid_length; i++) {
-		real_array.value({strip_grid_width + i, 0}) = f({left_domain_pos + cell_diagonal * value_t(i), slide_value});
-		real_array.value({i, coord_t(2 * strip_grid_width)}) = g({left_domain_pos + cell_diagonal * value_t(i), slide_value});
+	for (uint8_t border_id = 0; border_id < 4; border_id++) {
+		line.set_line(starts[border_id], dirs[border_id]);
+		for (steps_count_t step = 0; step < total_steps; step++) {
+			coord_t t = distrib[border_id % 2](gen);
+			real_array.value(starts[border_id] + dirs[border_id] * t) += f(step);
+			algo::convex::convex_hull(line, 0, sizes[border_id] - 1);
+		}
 	}
 }
 
-void SquareBiconcave::calculate_hull (steps_count_t steps_count) {
+template <AddFunc Func>
+void SquareBiconcave::generate_biconcave_function_with_borders (
+	std::mt19937 & gen, Func f, steps_count_t total_steps, steps_count_t minimal_steps
+) {
+	coord_t a = real_array.x_size();
+	coord_t b = real_array.y_size();
+	std::uniform_int_distribution<coord_t> distrib_x(1, a - 1);
+	std::uniform_int_distribution<coord_t> distrib_y(1, b - 1);
+	
 	HullHandler hull_handler(real_array);
-	
-	for (coord_t i = 1; i < strip_grid_width; i++) {
-		hull_handler.add_line(0, {strip_grid_width, i}, {1, -1}, i);
-		hull_handler.add_line(0, {strip_grid_length - i, 2 * strip_grid_width}, {1, -1}, i);
-		hull_handler.add_line(1, {i, coord_t(2 * strip_grid_width - i)}, {0, 1}, i);
-		hull_handler.add_line(1, {strip_grid_length + strip_grid_width - i, 0}, {0, 1}, i);
+	for (coord_t x = 0; x < a; x++) {
+		hull_handler.add_line(0, {x, 0}, {0, 1}, b);
+	}
+	for (coord_t y = 0; y < b; y++) {
+		hull_handler.add_line(1, {y,0}, {1, 0}, a);
 	}
 	
-	for (coord_t i = 0; i <= strip_grid_length - strip_grid_width; i++) {
-		hull_handler.add_line(0, {i, coord_t(2 * strip_grid_width)}, {1, -1}, 2 * strip_grid_width);
-		hull_handler.add_line(1, {strip_grid_width + i, 0}, {0, 1}, 2 * strip_grid_width);
+	hull_handler.build_convex_hull<false>(minimal_steps);
+	
+	for (steps_count_t step = 0; step < total_steps; step++) {
+		real_array.value({distrib_x(gen), distrib_y(gen)}) += f(step);
+		hull_handler.build_convex_hull<false>(minimal_steps);
+	}
+}
+
+
+
+void SquareBiconcave::calculate_min_function (steps_count_t steps_count) {
+	HullHandler hull_handler(real_array);
+	coord_t a = real_array.x_size();
+	coord_t b = real_array.y_size();
+	
+	for (coord_t x = 0; x < a; x++) {
+		hull_handler.add_line(0, {x, 0}, {0, 1}, b);
+	}
+	for (coord_t y = 0; y < b; y++) {
+		hull_handler.add_line(1, {y,0}, {1, 0}, a);
 	}
 	
 	hull_handler.build_convex_hull<false>(steps_count);
 }
+
+void SquareBiconcave::calculate_max_function () {
+	hull::calculate_max_biconcave_function<value_t>(real_array, Point(grid_radius_length));
+}
+
+
+
+value_t SquareBiconcave::calculate_min_function_by_border_and_compare (steps_count_t steps_count) {
+	auto copied_array = real_array;
+	for (coord_t x = 1; x < real_array.x_size() - 1; x++) {
+		for (coord_t y = 1; y < real_array.y_size() - 1; y++) {
+			real_array.value({x, y}) = -1e9;
+		}
+	}
+	calculate_min_function(steps_count);
+	value_t diff = 0;
+	for (coord_t x = 1; x < real_array.x_size() - 1; x++) {
+		for (coord_t y = 1; y < real_array.y_size() - 1; y++) {
+			diff = std::max(diff, copied_array.value({x, y}) - real_array.value({x, y}));
+		}
+	}
+	return diff;
+}
+
+
 
 void SquareBiconcave::calculate_hessian () {
 	hessian.init(real_array, cell_width);
@@ -206,12 +190,16 @@ void SquareBiconcave::calculate_hessian () {
 void SquareBiconcave::calculate_graphics (func::Func const & color_func, uint16_t colors_number) {
 	graphics.init(real_array);
 	std::vector<uint8_t> transform = calculate_transform(
-		graphics.set_colors(hessian, color_func, slide_value), colors_number
+		graphics.set_colors(hessian, color_func, 0), colors_number
 	);
 	graphics.apply_transform(transform, hessian);
-	
 }
 
+
+
+void SquareBiconcave::print_function (std::string const & file_path, std::string const & file_name) {
+	
+}
 
 
 void SquareBiconcave::print_profile (std::string const & file_path, std::string const & file_name) {
@@ -274,5 +262,5 @@ void SquareBiconcave::print_profile (std::string const & file_path, std::string 
 	
 	svg_print.file_structs().file_end();
 }
-
+	
 } // namespace biconcave
