@@ -32,12 +32,11 @@ template <typename value_t>
 void HullHandler<value_t>::add_line (
 	bool dim, Point const & first, Point const & step, coord_t segments
 ) {
-	lines[dim].emplace_back(
+	lines[dim].push_back(Line{
 		array->value_id(first),
-		segments == 0 ? 0 :
-		array->value_id(first + step) - array->value_id(first),
+		segments == 0 ? 0 : array->value_id(first + step) - array->value_id(first),
 		segments
-	);
+	});
 }
 
 

@@ -23,6 +23,8 @@ template <typename Item, typename id_t, typename Compare>
 requires std::predicate<Compare, Item const &, Item const &>
 Heap<Item, id_t, Compare>::Heap (std::vector<Item> items_) {
 	items = std::move(items_);
+	item_ids.resize(items.size());
+	item_indexes.resize(items.size());
 	std::iota(item_indexes.begin(), item_indexes.end(), 0);
 	std::iota(item_ids.begin(), item_ids.end(), 0);
 }
@@ -60,6 +62,7 @@ Item const & Heap<Item, id_t, Compare>::top () const {
 
 template <typename Item, typename id_t, typename Compare>
 requires std::predicate<Compare, Item const &, Item const &>id_t Heap<Item, id_t, Compare>::top_id () const {
+	assert(! item_ids.empty());
 	return item_ids[0];
 }
 
@@ -67,7 +70,7 @@ requires std::predicate<Compare, Item const &, Item const &>id_t Heap<Item, id_t
 
 template <typename Item, typename id_t, typename Compare>
 requires std::predicate<Compare, Item const &, Item const &>bool Heap<Item, id_t, Compare>::has_item (id_t id) {
-	assert(0 < id && id < item_ids.size());
+	assert(0 <= id && id < item_indexes.size());
 	return item_indexes[id] != MAX_ID;
 }
 
@@ -101,11 +104,20 @@ void Heap<Item, id_t, Compare>::update (id_t id, Item item) {
 template <typename Item, typename id_t, typename Compare>
 requires std::predicate<Compare, Item const &, Item const &>
 void Heap<Item, id_t, Compare>::pop () {
-	assert(! empty());
-	item_indexes[item_ids.back()] = 0;
-	item_indexes[item_ids.front()] = MAX_ID;
+	assert(!empty());
+	
+	id_t removed_id = item_ids.front();
+	item_indexes[removed_id] = MAX_ID;
+	
+	if (item_ids.size() == 1) {
+		item_ids.pop_back();
+		return;
+	}
+	
 	item_ids.front() = item_ids.back();
+	item_indexes[item_ids.front()] = 0;
 	item_ids.pop_back();
+	
 	shift_down(0);
 }
 
@@ -113,11 +125,21 @@ template <typename Item, typename id_t, typename Compare>
 requires std::predicate<Compare, Item const &, Item const &>
 void Heap<Item, id_t, Compare>::erase (id_t id) {
 	assert(has_item(id));
-	item_ids[item_indexes[id]] = item_ids.back();
-	item_indexes[item_ids.back()] = item_indexes[id];
+	
+	id_t ind = item_indexes[id];
 	item_indexes[id] = MAX_ID;
+	
+	if (ind == item_ids.size() - 1) {
+		item_ids.pop_back();
+		return;
+	}
+	
+	item_ids[ind] = item_ids.back();
+	item_indexes[item_ids[ind]] = ind;
 	item_ids.pop_back();
-	shift_down(item_indexes[id]);
+	
+	shift_up(ind);
+	shift_down(ind);
 }
 
 
@@ -176,17 +198,24 @@ template <typename Item, typename id_t, typename Compare>
 requires std::predicate<Compare, Item const &, Item const &>
 void Heap<Item, id_t, Compare>::shift_down (id_t ind) {
 	while (true) {
-		id_t left = 2 * ind;
-		id_t right = 2 * ind + 1;
-		if (left < size() && cmp(items[item_ids[left]], items[item_ids[ind]])) {
-			swap_items(ind, left);
-			ind = left;
-		} else if (right < size() && cmp(items[item_ids[right]], items[item_ids[ind]])) {
-			swap_items(ind, right);
-			ind = right;
-		} else {
+		id_t left = 2 * ind + 1;
+		id_t right = 2 * ind + 2;
+		id_t best = ind;
+		
+		if (left < size() && cmp(items[item_ids[left]], items[item_ids[best]])) {
+			best = left;
+		}
+		
+		if (right < size() && cmp(items[item_ids[right]], items[item_ids[best]])) {
+			best = right;
+		}
+		
+		if (best == ind) {
 			break;
 		}
+		
+		swap_items(ind, best);
+		ind = best;
 	}
 }
 

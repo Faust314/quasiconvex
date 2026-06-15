@@ -4,6 +4,10 @@
 #include "Graphics/threshold.hpp"
 #include "Graphics/combine.hpp"
 #include "../ConvexHull/max_biconcave.tpp"
+#include "../Graphics/Threedim/Structs/func.hpp"
+#include "../Algo/heap.tpp"
+#include "../Math/Geometry/Multidimensional/multi_point.tpp"
+#include "../Array/Basic/basic.tpp"
 
 namespace biconcave {
 
@@ -44,7 +48,7 @@ void SquareBiconcave::init_array (
 	
 	real_array.init(
 		grid_length, grid_length,
-		-1e9
+		-1
 	);
 	
 	value_t scale = std::min(
@@ -58,87 +62,11 @@ void SquareBiconcave::init_array (
 	plane_affine.c = 0;
 	plane_affine.d = scale;
 	
-	Point p0 = {value_t(grid_radius_length), value_t(grid_radius_length)};
-	Point p1 = {screen_width / 2, screen_height / 2};
-	Point p = p1 - plane_affine(p0);
+	ArrayPoint p0 = {value_t(grid_radius_length), value_t(grid_radius_length)};
+	ArrayPoint p1 = {screen_width / 2, screen_height / 2};
+	ArrayPoint p = p1 - plane_affine(p0);
 	plane_affine.x0 = p.x;
 	plane_affine.y0 = p.y;
-}
-
-
-
-template <AddFunc Func>
-void SquareBiconcave::generate_borders (
-	std::mt19937 & gen, Func f, steps_count_t total_steps
-) {
-	real_array.set_values(-1e9);
-	coord_t a = real_array.x_size();
-	coord_t b = real_array.y_size();
-	std::vector<Point> starts = {Point(0,0), Point(a, 0), Point(a, b), Point(0, b)};
-	std::vector<Point> dirs = {Point(1,0), Point(0,1), Point(-1, 0), Point(0, -1)};
-	std::vector<coord_t> sizes = {a, b, a, b};
-	
-	class ConvexLine {
-	public:
-		RealArray * arr;
-		void set_line (Point p, Point dir) {
-			b = arr->value_id(p);
-			a = arr->value_id(p + dir) - b;
-		}
-		value_t & operator() (coord_t coord) {
-			return arr->value(a * coord + b);
-		}
-		
-	private:
-		value_id_t a;
-		value_id_t b;
-	};
-	ConvexLine line;
-	line.arr = real_array;
-	
-	std::vector<std::uniform_int_distribution<coord_t>> distrib;
-	distrib.emplace_back(1, a - 1);
-	distrib.emplace_back(1, b - 1);
-	
-	for (uint8_t border_id = 0; border_id < 4; border_id++) {
-		for (coord_t t = 0; t < sizes[border_id]; t++) {
-			real_array.value(starts[border_id] + dirs[border_id] * t) = 0;
-		}
-	}
-	
-	for (uint8_t border_id = 0; border_id < 4; border_id++) {
-		line.set_line(starts[border_id], dirs[border_id]);
-		for (steps_count_t step = 0; step < total_steps; step++) {
-			coord_t t = distrib[border_id % 2](gen);
-			real_array.value(starts[border_id] + dirs[border_id] * t) += f(step);
-			algo::convex::convex_hull(line, 0, sizes[border_id] - 1);
-		}
-	}
-}
-
-template <AddFunc Func>
-void SquareBiconcave::generate_biconcave_function_with_borders (
-	std::mt19937 & gen, Func f, steps_count_t total_steps, steps_count_t minimal_steps
-) {
-	coord_t a = real_array.x_size();
-	coord_t b = real_array.y_size();
-	std::uniform_int_distribution<coord_t> distrib_x(1, a - 1);
-	std::uniform_int_distribution<coord_t> distrib_y(1, b - 1);
-	
-	HullHandler hull_handler(real_array);
-	for (coord_t x = 0; x < a; x++) {
-		hull_handler.add_line(0, {x, 0}, {0, 1}, b);
-	}
-	for (coord_t y = 0; y < b; y++) {
-		hull_handler.add_line(1, {y,0}, {1, 0}, a);
-	}
-	
-	hull_handler.build_convex_hull<false>(minimal_steps);
-	
-	for (steps_count_t step = 0; step < total_steps; step++) {
-		real_array.value({distrib_x(gen), distrib_y(gen)}) += f(step);
-		hull_handler.build_convex_hull<false>(minimal_steps);
-	}
 }
 
 
@@ -149,10 +77,10 @@ void SquareBiconcave::calculate_min_function (steps_count_t steps_count) {
 	coord_t b = real_array.y_size();
 	
 	for (coord_t x = 0; x < a; x++) {
-		hull_handler.add_line(0, {x, 0}, {0, 1}, b);
+		hull_handler.add_line(0, {x, 0}, {0, 1}, b - 1);
 	}
 	for (coord_t y = 0; y < b; y++) {
-		hull_handler.add_line(1, {y,0}, {1, 0}, a);
+		hull_handler.add_line(1, {0,y}, {1, 0}, a - 1);
 	}
 	
 	hull_handler.build_convex_hull<false>(steps_count);
@@ -192,13 +120,31 @@ void SquareBiconcave::calculate_graphics (func::Func const & color_func, uint16_
 	std::vector<uint8_t> transform = calculate_transform(
 		graphics.set_colors(hessian, color_func, 0), colors_number
 	);
-	graphics.apply_transform(transform, hessian);
+//	graphics.apply_transform(transform, hessian);
+}
+
+void SquareBiconcave::calculate_graphics () {
+	func::Func func("1 / (1 + 1000 * t)", {"t", "s"});
+	calculate_graphics(func, 100);
 }
 
 
 
 void SquareBiconcave::print_function (std::string const & file_path, std::string const & file_name) {
+	using ArrayPoint = math::geom::multi::Point<array::array_coord_t, 2>;
+	graphics::threedim::str::Func func(ArrayPoint({0, 0}), ArrayPoint({real_array.x_size() - 1, real_array.y_size() - 1}));
 	
+	for (coord_t x = 0; x < real_array.x_size(); x++) {
+		for (coord_t y = 0; y < real_array.y_size(); y++) {
+			func.func_points()(ArrayPoint({x,y})).value() = real_array.value(Point({x,y}));
+			func.func_points()(ArrayPoint({x,y})).color() = graphics.color(Point({x,y}));
+		}
+	}
+	
+	graphics::threedim::Model model;
+	func.output(model, {0,0}, {1,1});
+	aux::dir::process_path(file_path);
+	model.output_to_obj(file_path, file_name);
 }
 
 
@@ -237,10 +183,10 @@ void SquareBiconcave::print_profile (std::string const & file_path, std::string 
 	for (uint32_t i = 0; i < colors.size(); i++) {
 		Combine combine(real_array.x_size(), real_array.y_size());
 		for (ArrayPoint const & p : points[i]) {
-			combine.add_point(p);
+			combine.add_point1(p);
 		}
-		combine.erase_extra_edges();
-		std::vector<std::vector<Point>> contours = combine.calculate_contours();
+		combine.erase_extra_edges1();
+		std::vector<std::vector<Point>> contours = combine.calculate_contours1();
 		
 		svg_print.path().begin();
 		svg_print.file_structs().painting({

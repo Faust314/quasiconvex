@@ -22,9 +22,9 @@ std::vector<value_id_t> Graphics::set_colors (
 		for (coord_t y = 0; y < colors.y_size(); y++) {
 			p = {x, y};
 			for (uint8_t dim = 0; dim < 2; dim++) {
-				if (colors.has_point(p) && hessian.has_derivative(dim, p)) {
+				if (colors.has_point(p) && hessian.has_derivative1(dim, p)) {
 					c[dim] = uint8_t(std::round(255 * colors_func({
-						std::abs(hessian.derivative(dim, p)), slide_value
+						std::abs(hessian.derivative1(dim, p)), slide_value
 					})));
 					colors_count[c[dim]]++;
 				} else {
@@ -41,10 +41,10 @@ void Graphics::apply_transform (std::vector<uint8_t> const & transform, Hessian 
 	for (coord_t x = 0; x < colors.x_size(); x++) {
 		for (coord_t y = 0; y < colors.y_size(); y++) {
 			if (colors.has_point({x, y})) {
-				if (hessian.has_derivative(0, {x, y})) {
+				if (hessian.has_derivative1(0, {x, y})) {
 					colors.value({x, y}).r = transform[colors.value({x, y}).r];
 				}
-				if (hessian.has_derivative(1, {x, y})) {
+				if (hessian.has_derivative1(1, {x, y})) {
 					colors.value({x, y}).g = transform[colors.value({x, y}).g];
 				}
 			}

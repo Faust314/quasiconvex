@@ -16,6 +16,10 @@ struct RGB {
 	
 	explicit RGB (arg_t r_ = 0, arg_t g = 0, arg_t b = 0);
 	
+	void compress (arg_t step);
+	
+	uint32_t hash ();
+	
 	std::string to_string_16 () const;
 };
 

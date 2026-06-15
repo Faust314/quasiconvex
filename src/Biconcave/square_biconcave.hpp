@@ -53,6 +53,7 @@ public:
 	
 	void calculate_hessian ();
 	void calculate_graphics (func::Func const & color_func, uint16_t colors_number);
+	void calculate_graphics ();
 	
 	void print_function (std::string const & file_path, std::string const & file_name);
 	void print_profile (std::string const & file_path, std::string const & file_name);

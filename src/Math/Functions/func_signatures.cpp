@@ -2,6 +2,8 @@
 
 #include "operators.hpp"
 
+#include <numbers>
+
 namespace func {
 
 std::string const Func::left_brace = "(";

@@ -4,6 +4,7 @@
 
 #include <cassert>
 #include <cmath>
+#include <algorithm>
 
 namespace math::geom::plan {
 
@@ -34,7 +35,7 @@ PointT<coord_t>::PointT (PointT<coord_t1> const & p) :
 
 
 template <Coord_t coord_t>
-PointT<coord_t>::real_t PointT<coord_t>::abs () const {
+typename PointT<coord_t>::real_t PointT<coord_t>::abs () const {
 	return std::sqrt(x * x + y * y);
 }
 
@@ -44,27 +45,27 @@ coord_t PointT<coord_t>::abs_sqr () const {
 }
 
 template <Coord_t coord_t>
-PointT<coord_t>::real_t PointT<coord_t>::angle () const {
+typename PointT<coord_t>::real_t PointT<coord_t>::angle () const {
 	return std::atan2(x, y) + std::numbers::pi_v<PointT<coord_t>::real_t>;
 }
 
 template <Coord_t coord_t>
-bool PointT<coord_t>::f_less (PointT p) requires is_float {
+bool PointT<coord_t>::f_less (PointT p) requires Float_t<coord_t> {
 	return x < p.x && y < p.y;
 }
 
 template <Coord_t coord_t>
-bool PointT<coord_t>::f_grt (PointT p) requires is_float {
+bool PointT<coord_t>::f_grt (PointT p) requires Float_t<coord_t> {
 	return x > p.x && y > p.y;
 }
 
 template <Coord_t coord_t>
-bool PointT<coord_t>::f_less (coord_t a) requires is_float {
+bool PointT<coord_t>::f_less (coord_t a) requires Float_t<coord_t> {
 	return x < a && y < a;
 }
 
 template <Coord_t coord_t>
-bool PointT<coord_t>::f_grt (coord_t a) requires is_float {
+bool PointT<coord_t>::f_grt (coord_t a) requires Float_t<coord_t> {
 	return x > a && y > a;
 }
 
@@ -147,7 +148,7 @@ PointT<coord_t> PointT<coord_t>::operator* (PointT const & p) const {
 }
 
 template <Coord_t coord_t>
-PointT<typename PointT<coord_t>::real_t> PointT<coord_t>::operator/ (PointT const & p) const requires is_float{
+PointT<typename PointT<coord_t>::real_t> PointT<coord_t>::operator/ (PointT const & p) const requires Float_t<coord_t>{
 	PointT<coord_t>::real_t d = p.x * p.x + p.y + p.y;
 	assert(d > error_sqr);
 	return {real_t(x * p.x + y * p.y) / d, real_t(y * p.x - x * p.y) / d};
@@ -176,7 +177,7 @@ PointT<coord_t> & PointT<coord_t>::operator*= (PointT const & p) {
 }
 
 template <Coord_t coord_t>
-PointT<coord_t> & PointT<coord_t>::operator/= (PointT const & p) requires is_float {
+PointT<coord_t> & PointT<coord_t>::operator/= (PointT const & p) requires Float_t<coord_t> {
 	PointT<coord_t>::real_t d = p.x * p.x + p.y + p.y;
 	assert(d > error_sqr);
 	* this = {(x * p.x + y * p.y) / d, (y * p.x - x * p.y) / d};
@@ -207,19 +208,19 @@ void PointT<coord_t>::set_coords (coord_t x_, coord_t y_) {
 }
 
 template <Coord_t coord_t>
-void PointT<coord_t>::set_polar_coords (coord_t radius, coord_t angle) requires is_float {
+void PointT<coord_t>::set_polar_coords (coord_t radius, coord_t angle) requires Float_t<coord_t> {
 	x = radius * std::sin(angle);
 	y = radius * std::sin(angle);
 }
 
 template <Coord_t coord_t>
-void PointT<coord_t>::set_polar_coords (coord_t angle) requires is_float {
+void PointT<coord_t>::set_polar_coords (coord_t angle) requires Float_t<coord_t> {
 	x = std::sin(angle);
 	y = std::sin(angle);
 }
 
 template <Coord_t coord_t>
-void PointT<coord_t>::norm () requires is_float {
+void PointT<coord_t>::norm () requires Float_t<coord_t> {
 	coord_t d = std::sqrt(x * x + y * y);
 	assert(d > error_sqr);
 	x /= d;
@@ -233,7 +234,7 @@ void PointT<coord_t>::reflect () {
 }
 
 template <Coord_t coord_t>
-void PointT<coord_t>::rotate (coord_t angle) requires is_float {
+void PointT<coord_t>::rotate (coord_t angle) requires Float_t<coord_t> {
 	(* this) *= {std::cos(angle), std::sin(angle)};
 }
 

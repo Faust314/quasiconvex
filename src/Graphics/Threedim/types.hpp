@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../Graphics1/types.hpp"
+#include "../../Graphics/types.hpp"
 #include "../../Math/Geometry/Stereometry/threedim_point.hpp"
 
 namespace graphics::threedim {

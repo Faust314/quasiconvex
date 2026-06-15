@@ -23,9 +23,11 @@ public:
 	struct PointAccess {
 		value_t & operator() (coord_t coord);
 		
+		explicit PointAccess (RealArray * array_) : array(array_) {}
+		
 		RealArray * array;
-		array_size_t begin;
-		array_size_t step;
+		array_size_t begin = 0;
+		array_size_t step = 0;
 	};
 	
 public:

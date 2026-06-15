@@ -79,11 +79,11 @@ void Func::init (std::string const & formula, std::vector<std::string> const & v
 		} else if (token.token_kind != token_kind_t::function) {
 			new_tokens.push_back(token);
 		} else {
-			new_tokens.emplace_back(
+			new_tokens.push_back(Operator{
 				token_kind_t::oper,
 				token.sign,
-				commas + 1
-			);
+				func::Func::token_id_t(commas + 1)
+			});
 			commas = 0;
 		}
 	}
@@ -163,9 +163,9 @@ std::vector<std::string> Func::split_formula (std::string const & formula) {
 
 
 void Func::add_left_brace () {
-	tokens_stack.emplace(
+	tokens_stack.push(Operator{
 		token_kind_t::left_brace
-	);
+	});
 }
 
 void Func::add_right_brace () {
@@ -189,34 +189,31 @@ void Func::add_comma () {
 		tokens_stack.pop();
 		assert(! tokens_stack.empty());
 	}
-	tokens.emplace_back(
+	tokens.push_back(Operator{
 		token_kind_t::comma,
 		Sign()
-	);
+	});
 }
 
 void Func::add_variable (token_id_t var_id) {
-	tokens.emplace_back(
-		token_kind_t::variable,
-		Sign(),
-		var_id
-	);
+	tokens.push_back(Operator{
+		token_kind_t::variable, Sign(), var_id
+	});
 }
 
 void Func::add_value (double value) {
-	tokens.emplace_back(
+	tokens.push_back(Operator{
 		token_kind_t::value,
 		Sign(),
 		0,
 		value
-	);
+	});
 }
 
 void Func::add_function (Func::Sign const & sign) {
-	tokens_stack.emplace(
-		token_kind_t::function,
-		sign
-	);
+	tokens_stack.push(Operator {
+		token_kind_t::function, sign
+	});
 }
 
 void Func::add_oper (Sign const & sign, token_id_t args_number) {
@@ -228,11 +225,11 @@ void Func::add_oper (Sign const & sign, token_id_t args_number) {
 		tokens.push_back(tokens_stack.top());
 		tokens_stack.pop();
 	}
-	tokens_stack.emplace(
+	tokens_stack.push(Operator{
 		token_kind_t::oper,
 		sign,
 		args_number
-	);
+	});
 }
 	
 } // namespace func

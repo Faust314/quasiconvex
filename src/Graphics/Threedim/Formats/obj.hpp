@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../../Graphics1/Color/color.hpp"
+#include "../../Color/colors.tpp"
 #include "../types.hpp"
 #include "../../../Utils/Basic/types.hpp"
 

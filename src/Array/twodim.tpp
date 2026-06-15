@@ -104,7 +104,7 @@ void Twodim<value_t>::disable_point (Point const & p) {
 template <typename value_t>
 void Twodim<value_t>::disable_point (value_id_t value_id) {
 	assert(0 <= value_id && value_id < values.size());
-	used[value_id];
+	used[value_id] = false;
 }
 
 template <typename value_t>

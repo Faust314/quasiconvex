@@ -6,13 +6,13 @@ namespace math::geom::plan {
 
 template <Coord_t coord_t>
 class PointT {
-private:
+public:
 	using real_t = Real_t<coord_t>;
 	constexpr static bool is_float = Float_t<coord_t>;
 	
 public:
 	PointT () = default;
-	PointT (coord_t a);
+	explicit PointT (coord_t a);
 	PointT (coord_t x_, coord_t y_);
 	template <Coord_t coord_t1>
 	PointT (coord_t1 x_, coord_t1 y_);
@@ -27,10 +27,10 @@ public:
 	real_t abs () const;
 	coord_t abs_sqr () const;
 	real_t angle () const;
-	bool f_less (PointT p) requires is_float;
-	bool f_grt (PointT p) requires is_float;
-	bool f_less (coord_t a) requires is_float;
-	bool f_grt (coord_t a) requires is_float;
+	bool f_less (PointT p) requires Float_t<coord_t>;
+	bool f_grt (PointT p) requires Float_t<coord_t>;
+	bool f_less (coord_t a) requires Float_t<coord_t>;
+	bool f_grt (coord_t a) requires Float_t<coord_t>;
 	
 	bool operator== (PointT const & p) const;
 	bool operator!= (PointT const & p) const;
@@ -43,21 +43,21 @@ public:
 	PointT operator+ (PointT const & p) const;
 	PointT operator- (PointT const & p) const;
 	PointT operator* (PointT const & p) const;
-	PointT<real_t> operator/ (PointT const & p) const requires is_float;
+	PointT<real_t> operator/ (PointT const & p) const requires Float_t<coord_t>;
 	
 	PointT & operator+= (PointT const & p);
 	PointT & operator-= (PointT const & p);
 	PointT & operator*= (PointT const & p);
-	PointT & operator/= (PointT const & p) requires is_float;
+	PointT & operator/= (PointT const & p) requires Float_t<coord_t>;
 	PointT & operator*= (coord_t a);
 	PointT & operator/= (coord_t a);
 	
 	void set_coords (coord_t x_, coord_t y_);
-	void set_polar_coords (coord_t radius, coord_t angle) requires is_float;
-	void set_polar_coords (coord_t angle) requires is_float;
-	void norm () requires is_float;
+	void set_polar_coords (coord_t radius, coord_t angle) requires Float_t<coord_t>;
+	void set_polar_coords (coord_t angle) requires Float_t<coord_t>;
+	void norm () requires Float_t<coord_t>;
 	void reflect ();
-	void rotate (coord_t angle) requires is_float;
+	void rotate (coord_t angle) requires Float_t<coord_t>;
 };
 
 

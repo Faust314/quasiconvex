@@ -41,7 +41,7 @@ public:
 	
 private:
 	Compare cmp = Compare{};
-	std::vector<id_t> items;
+	std::vector<Item> items;
 	std::vector<id_t> item_ids;
 	std::vector<id_t> item_indexes;
 	inline static id_t const MAX_ID = std::numeric_limits<id_t>::max();

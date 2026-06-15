@@ -19,26 +19,36 @@ namespace detail {
 
 template <typename value_t>
 MaxBiconcaveFunction<value_t>::MaxBiconcaveFunction (array::Twodim<value_t> & real_array_) :
-	real_array(& real_array_), single_edges_heap()
+	real_array(& real_array_)
 {}
 
 template <typename value_t>
 void MaxBiconcaveFunction<value_t>::operator() (Point const & center) {
+	std::ofstream ofs("output/error.txt");
+	
 	assert(check_center(center));
 	
 	for (array_size_t value_id = 0; value_id < real_array->size(); value_id++) {
 		real_array->disable_point(value_id);
 	}
 	
+	ofs << "AAAA\n";
+	
 	insert_point(center);
 	
-	while (! single_edges_heap.empty() || ! double_edges_ids.empty()) {
-		if (single_edges_heap.top() < double_edges_heap.top()) {
+	while (! single_edges_heap.empty() || ! double_edges_heap.empty()) {
+		ofs << "!!!!\n";
+		if (
+			double_edges_heap.empty() ||
+			(! single_edges_heap.empty() && (single_edges_heap.top() < double_edges_heap.top()))
+		) {
 			add_shift(single_edges_heap.top());
+			ofs << "!" << single_edges_heap.empty() << "\n";
 			insert_point(single_edge_endpoints[single_edges_heap.top_id()]);
 		} else {
 			add_shift(double_edges_heap.top());
-			std::pair<Point, dir_id_t> const & endpoints = double_edge_endpoints[double_edges_heap.top_id()];
+			ofs << "!!" << double_edges_heap.empty() << "\n";
+			std::pair<Point, dir_id_t> endpoints = double_edge_endpoints[double_edges_heap.top_id()];
 			insert_point(endpoints.first + dirs[endpoints.second]);
 			insert_point(endpoints.first - dirs[endpoints.second]);
 		}
@@ -48,7 +58,7 @@ void MaxBiconcaveFunction<value_t>::operator() (Point const & center) {
 
 
 template <typename value_t>
-bool MaxBiconcaveFunction<value_t>::in_array (Point const & p) const {
+bool MaxBiconcaveFunction<value_t>::in_array (Point p) const {
 	return
 		((0 <= p.x) && (p.x < real_array->x_size())) &&
 		((0 <= p.y) && (p.y < real_array->y_size()));
@@ -65,29 +75,31 @@ void MaxBiconcaveFunction<value_t>::add_shift (value_t new_shift) {
 }
 
 template <typename value_t>
-void MaxBiconcaveFunction<value_t>::enable_point (Point const & p) {
+void MaxBiconcaveFunction<value_t>::enable_point (Point p) {
 	real_array->enable_point(p);
 	real_array->value(p) += shift;
 }
 
 template <typename value_t>
-void MaxBiconcaveFunction<value_t>::erase_single_point (Point const & p, MaxBiconcaveFunction::dir_id_t dir_id) {
+void MaxBiconcaveFunction<value_t>::erase_single_point (Point p, MaxBiconcaveFunction::dir_id_t dir_id) {
 	std::unordered_map<array_size_t, array_size_t>::iterator it
 		= single_edge_ids.find(edge_hash(p, dir_id));
+	assert(it != single_edge_ids.end());
 	single_edges_heap.erase(it->second);
 	single_edge_ids.erase(it);
 }
 
 template <typename value_t>
-void MaxBiconcaveFunction<value_t>::erase_double_point (Point const & p, MaxBiconcaveFunction::dir_id_t dir_id) {
+void MaxBiconcaveFunction<value_t>::erase_double_point (Point p, MaxBiconcaveFunction::dir_id_t dir_id) {
 	std::unordered_map<array_size_t, array_size_t>::iterator it
 		= double_edges_ids.find(edge_hash(p, dir_id));
+	assert(it != double_edges_ids.end());
 	double_edges_heap.erase(it->second);
 	double_edges_ids.erase(it);
 }
 
 template <typename value_t>
-void MaxBiconcaveFunction<value_t>::insert_single_edge (Point const & p, MaxBiconcaveFunction::dir_id_t dir_id) {
+void MaxBiconcaveFunction<value_t>::insert_single_edge (Point p, MaxBiconcaveFunction::dir_id_t dir_id) {
 	assert(in_array(p) && in_array(p - dirs[dir_id]) && in_array(p + dirs[dir_id]));
 	single_edges_heap.push(
 		2 * real_array->value(p) - (real_array->value(p - dirs[dir_id]) + real_array->value(p + dirs[dir_id]))
@@ -97,22 +109,22 @@ void MaxBiconcaveFunction<value_t>::insert_single_edge (Point const & p, MaxBico
 }
 
 template <typename value_t>
-void MaxBiconcaveFunction<value_t>::insert_double_edge (Point const & p, MaxBiconcaveFunction::dir_id_t dir_id) {
+void MaxBiconcaveFunction<value_t>::insert_double_edge (Point p, MaxBiconcaveFunction::dir_id_t dir_id) {
 	assert(in_array(p) && in_array(p - dirs[dir_id]) && in_array(p + dirs[dir_id]));
 	double_edges_heap.push(
 		real_array->value(p) - (real_array->value(p - dirs[dir_id]) + real_array->value(p + dirs[dir_id]) * 0.5)
 	);
 	double_edges_ids.emplace(real_array->value_id(p) * 4 + dir_id % 2, double_edge_endpoints.size());
-	double_edge_endpoints.emplace_back(p, dir_id);
+	double_edge_endpoints.push_back({p, dir_id});
 }
 
 template <typename value_t>
-void MaxBiconcaveFunction<value_t>::insert_point (Point const & p) {
+void MaxBiconcaveFunction<value_t>::insert_point (Point p) {
 	Point p1, p2;
 	enable_point(p);
 	for (dir_id_t dir_id = 0; dir_id < 4; dir_id++) {
 		p1 = p - dirs[dir_id];
-		p2 = p - dirs[dir_id];
+		p2 = p1 - dirs[dir_id];
 		if (in_array(p1) && in_array(p2)) {
 			if (real_array->has_point(p1)) {
 				erase_single_point(p1, dir_id);

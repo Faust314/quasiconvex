@@ -15,9 +15,14 @@ public:
 	
 	void add_point (ArrayPoint const & p);
 	
+	void add_point1 (ArrayPoint const & p);
+	
 	void erase_extra_edges ();
 	
+	void erase_extra_edges1 ();
+	
 	std::vector<std::vector<Point>> calculate_contours ();
+	std::vector<std::vector<Point>> calculate_contours1 ();
 	
 private:
 	Edges edges;
@@ -25,6 +30,7 @@ private:
 	
 	void include_point (ArrayPoint const & p);
 	static ArrayPoint next_point (ArrayPoint const & p, uint8_t dir);
+	static ArrayPoint next_point1 (ArrayPoint const & p, uint8_t dir);
 	static uint8_t opposite_dir (uint8_t dir);
 	uint8_t next_dir (ArrayPoint const & p, uint8_t dir) const;
 	uint8_t next_dir (ArrayPoint const & p) const;

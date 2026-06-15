@@ -3,6 +3,7 @@
 #include <concepts>
 #include <type_traits>
 #include <numbers>
+#include <cstdint>
 
 namespace math::geom {
 
@@ -19,6 +20,15 @@ template<typename coord_t>
 concept Coord_t = Int_t<coord_t> || Float_t<coord_t>;
 
 template<typename coord_t>
-using Real_t = std::conditional<Int_t<coord_t>, double, coord_t>::type;
+using Real_t = typename std::conditional<Int_t<coord_t>, double, coord_t>::type;
+
+
+
+
+
+
+
+typedef double coord_t;
+typedef uint8_t index_t;
 
 } // namespace math::geom
