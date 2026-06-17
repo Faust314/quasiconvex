@@ -109,6 +109,11 @@ value_t SquareBiconcave::calculate_min_function_by_border_and_compare (steps_cou
 	return diff;
 }
 
+void SquareBiconcave::add_bounds(value_t min, value_t max) {
+	for (size_t i = 0; i < real_array.size(); i++) {
+		real_array.value(i) = std::max(min, std::min(max, real_array.value(i)));
+	}
+}
 
 
 void SquareBiconcave::calculate_hessian () {
@@ -120,12 +125,12 @@ void SquareBiconcave::calculate_graphics (func::Func const & color_func, uint16_
 	std::vector<uint8_t> transform = calculate_transform(
 		graphics.set_colors(hessian, color_func, 0), colors_number
 	);
-//	graphics.apply_transform(transform, hessian);
+	graphics.apply_transform(transform, hessian);
 }
 
 void SquareBiconcave::calculate_graphics () {
 	func::Func func("1 / (1 + 1000 * t)", {"t", "s"});
-	calculate_graphics(func, 100);
+	calculate_graphics(func, 2);
 }
 
 

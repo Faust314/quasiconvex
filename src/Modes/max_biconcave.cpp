@@ -13,8 +13,8 @@ void max_biconcave_mode () {
 	SquareBiconcave master(settings, 1920, 1080, 100);
 	
 	std::random_device rd;
-	// std::mt19937 gen(rd());
-	std::mt19937 gen(1);
+	std::mt19937 gen(rd());
+	// std::mt19937 gen(123);
 	
 	struct Func {
 		// ab^n
@@ -24,19 +24,28 @@ void max_biconcave_mode () {
 			return a * std::pow(b, n);
 		}
 	};
-	Func f {0.2, 0.9};
+	Func f {0.2, 0.95};
 	
-	master.init_array(1, 2);
+	master.init_array(1, 150);
 	
-	master.generate_borders<Func>(gen, f, 100);
-	// master.calculate_min_function(100);
-	master.generate_biconcave_function_with_borders(gen, f, 100, 100);
-	master.calculate_max_function();
+	master.generate_borders<Func>(gen, f, 10);
+	master.generate_biconcave_function_with_borders(gen, f, 10, 100);
 	
 	master.calculate_hessian();
 	master.calculate_graphics();
-	master.print_function("output", "func");
-	master.print_profile("output/profile.svg", "profile");
+	// master.print_function("output", "func1");
+	// master.print_profile("output/profile1.svg", "profile1");
+	
+	
+	master.calculate_min_function(10000);
+	master.calculate_max_function();
+	
+	// master.add_bounds(-1, 5);
+	
+	master.calculate_hessian();
+	master.calculate_graphics();
+	// master.print_function("output", "func2");
+	master.print_profile("output/profile2.svg", "profile2");
 }
 	
 } // namespace modes

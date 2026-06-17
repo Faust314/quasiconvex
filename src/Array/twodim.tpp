@@ -55,6 +55,11 @@ value_id_t Twodim<value_t>::value_id (Point const & p) const {
 	return links[p.x] + p.y;
 }
 
+template <typename value_t>
+Point Twodim<value_t>::point_by_id(value_id_t value_id_) const {
+	assert(value_id(Point({value_id_ / _y_size, value_id_ % _y_size})) == value_id_);
+	return Point({value_id_ / _y_size, value_id_ % _y_size});
+}
 
 
 template <typename value_t>

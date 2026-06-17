@@ -22,6 +22,7 @@ public:
 	inline value_id_t size () const;
 	
 	inline value_id_t value_id (Point const & p) const;
+	inline Point point_by_id (value_id_t value_id) const;
 	
 	inline bool has_point (Point const & p) const;
 	inline bool has_point (value_id_t value_id) const;

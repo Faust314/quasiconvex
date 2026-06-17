@@ -74,6 +74,11 @@ requires std::predicate<Compare, Item const &, Item const &>bool Heap<Item, id_t
 	return item_indexes[id] != MAX_ID;
 }
 
+template <typename Item, typename id_t, typename Compare> requires std::predicate<Compare, Item const&, Item const&>
+Item const & Heap<Item, id_t, Compare>::item(id_t id) {
+	assert(has_item(id));
+	return items[id];
+}
 
 
 template <typename Item, typename id_t, typename Compare>

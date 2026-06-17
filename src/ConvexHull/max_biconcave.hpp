@@ -19,7 +19,7 @@ namespace detail {
 template <typename value_t>
 class MaxBiconcaveFunction {
 public:
-	using Heap = algo::Heap<value_t, coord_t>;
+	using Heap = algo::Heap<value_t, array_size_t>;
 	typedef uint8_t dir_id_t;
 	
 public:
@@ -51,6 +51,9 @@ private:
 	inline static std::array<Point, 4> const dirs = {Point(1,0), Point(0,1), Point(-1,0), Point(0,-1)};
 	
 	bool check_center (Point const & center);
+	
+	double check_values ();
+	double check_struct ();
 };
 	
 } // detail

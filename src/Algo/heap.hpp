@@ -28,6 +28,7 @@ public:
 	id_t top_id () const;
 	
 	bool has_item (id_t id);
+	Item const & item (id_t id);
 	
 	id_t push (Item item);
 	void update (id_t id, Item item);

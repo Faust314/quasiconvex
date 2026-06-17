@@ -51,6 +51,8 @@ public:
 	
 	value_t calculate_min_function_by_border_and_compare (steps_count_t steps_count);
 	
+	void add_bounds (value_t min, value_t max);
+	
 	void calculate_hessian ();
 	void calculate_graphics (func::Func const & color_func, uint16_t colors_number);
 	void calculate_graphics ();
