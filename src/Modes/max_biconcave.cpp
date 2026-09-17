@@ -26,25 +26,27 @@ void max_biconcave_mode () {
 	};
 	Func f {0.2, 0.95};
 	
-	master.init_array(1, 150);
+	master.init_array(1, 50);
 	
-	master.generate_borders<Func>(gen, f, 10);
-	master.generate_biconcave_function_with_borders(gen, f, 10, 100);
+	master.generate_borders<Func>(gen, f, 30);
+	master.generate_biconcave_function_with_borders(gen, f, 50, 100);
+	// master.calculate_min_function(1000);
 	
 	master.calculate_hessian();
 	master.calculate_graphics();
 	// master.print_function("output", "func1");
 	// master.print_profile("output/profile1.svg", "profile1");
 	
-	
-	master.calculate_min_function(10000);
-	master.calculate_max_function();
+	for (int i = 0; i < 10; i++) {
+		master.calculate_max_function();
+		master.calculate_min_function(200);
+	}
 	
 	// master.add_bounds(-1, 5);
 	
 	master.calculate_hessian();
 	master.calculate_graphics();
-	// master.print_function("output", "func2");
+	master.print_function("output", "func2");
 	master.print_profile("output/profile2.svg", "profile2");
 }
 	

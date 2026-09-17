@@ -148,6 +148,7 @@ void SquareBiconcave::print_function (std::string const & file_path, std::string
 	
 	graphics::threedim::Model model;
 	func.output(model, {0,0}, {1,1});
+	model.arrange_colors(1);
 	aux::dir::process_path(file_path);
 	model.output_to_obj(file_path, file_name);
 }
